@@ -5,8 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Opium_NetStat"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Opium Netstat - Network Monitor" Height="545.735" Width="879.976" Icon="assets/if_JD-32_2625504.ico">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="46"/>
+            <RowDefinition/>
+            <RowDefinition Height="46"/>
+        </Grid.RowDefinitions>
+        <StatusBar Grid.Row="2"/>
+        <DataGrid Grid.Row="1" Grid.RowSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Local_IP" Header="Local IP" />
+                <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP"/>
+                <DataGridTextColumn x:Name="Origin" Header="Origin"/>
+                <DataGridTextColumn x:Name="Port" Header="Port #"/>
+                <DataGridTextColumn x:Name="Port_val" Header="Port Use"/>
+                <DataGridTextColumn x:Name="Sofwtawre" Header="Software"/>
+                <DataGridTextColumn x:Name="ConnectionStatus" Header="Status"/>
+                <DataGridTextColumn x:Name="Actions" Header="Actions"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
 </Window>
