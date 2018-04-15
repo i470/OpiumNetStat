@@ -10,22 +10,41 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="46"/>
             <RowDefinition/>
-            <RowDefinition Height="46"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
-        <StatusBar Grid.Row="2"/>
-        <DataGrid Grid.Row="1" Grid.RowSpan="2" ItemsSource="{Binding NetStatsNetStatResults}" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Local_IP" Header="Local IP"  Binding="{Binding LocalIP}"/>
-                <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
-                <DataGridTextColumn x:Name="Origin" Header="Origin" Binding="{Binding Origin}"/>
-                <DataGridTextColumn x:Name="Port_Number" Header="PortInfo # " Binding="{Binding PortNumber}"/>
-                <DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding  PortNormalyUsedBy}"/>
-                <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding  PortOfficial}"/>
-                <DataGridTextColumn x:Name="Software" Header="Software" Binding="{Binding Software}"/>
-                <DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>
-                <DataGridTextColumn x:Name="Actions" Header="Actions"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <StatusBar Grid.Row="2" Margin="0,0.333,0.333,-0.333"/>
+        <CheckBox Content="Hide HTTP/HTTPS connections" HorizontalAlignment="Left" Margin="22,20,0,0" VerticalAlignment="Top" Height="15" Width="183"/>
+        <TabControl x:Name="NetStatTabControl" Grid.Row="1" Margin="0">
+            <TabItem Header="Active Connections" >
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid ItemsSource="{Binding NetStatsNetStatResults}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="Local_IP" Header="Local IP"  Binding="{Binding LocalIP}"/>
+                            <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
+                            <DataGridTextColumn x:Name="Origin" Header="Origin" Binding="{Binding Origin}"/>
+                            <DataGridTextColumn x:Name="Port_Number" Header="PortInfo # " Binding="{Binding PortNumber}"/>
+                            <DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding PortNormalyUsedBy}"/>
+                            <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding PortOfficial}"/>
+                            <DataGridTextColumn x:Name="Software" Header="Software" Binding="{Binding Software}"/>
+                            <DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>
+                            <DataGridTextColumn x:Name="Actions" Header="Actions"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Netstat" DataContext="{Binding NetStatVM}">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid ItemsSource="{Binding NetStatPorts}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="PortNumber" Header="Port Number"  Binding="{Binding port_number}"/>
+                            <DataGridTextColumn x:Name="Process" Header="Process" Binding="{Binding process_name}"/>
+                            <DataGridTextColumn x:Name="Protocol" Header="Protocol" Binding="{Binding protocol}"/>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </Window>

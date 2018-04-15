@@ -29,6 +29,8 @@ namespace Opium_NetStat.viewmodel
 
         List<PortInfo> KnownPorts;
 
+        public NetStatViewModel NetStatVM { get; set; }
+
         public MainViewModel()
         {
           
@@ -44,6 +46,8 @@ namespace Opium_NetStat.viewmodel
             }
 
             NetStatsNetStatResults = getIPConnections();
+            NetStatVM=new NetStatViewModel();
+
         }
 
 

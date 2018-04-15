@@ -11,8 +11,15 @@ namespace Opium_NetStat
         public MainWindow()
         {
             InitializeComponent();
-            MainViewModel vm = new MainViewModel();
+
+            var vm = new MainViewModel
+            {
+                NetStatVM = new NetStatViewModel()
+            };
+
             this.DataContext = vm;
+
+          
 
         }
     }

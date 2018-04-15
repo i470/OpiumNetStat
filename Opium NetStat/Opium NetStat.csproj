@@ -90,7 +90,9 @@
     <Compile Include="utils\IActionCommand.cs" />
     <Compile Include="utils\IEventAggregator.cs" />
     <Compile Include="utils\Helper.cs" />
+    <Compile Include="utils\ProcessInformation.cs" />
     <Compile Include="viewmodel\MainViewModel.cs" />
+    <Compile Include="viewmodel\NetStatViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
