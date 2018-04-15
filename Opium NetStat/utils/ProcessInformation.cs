@@ -24,7 +24,7 @@ namespace Opium_NetStat.utils
                 {
 
                     ProcessStartInfo ps = new ProcessStartInfo();
-                    ps.Arguments = "-e -s"; //"-a -n -o";
+                    ps.Arguments = "-a -n -o";
                     ps.FileName = "netstat.exe";
                     ps.UseShellExecute = false;
                     ps.WindowStyle = ProcessWindowStyle.Hidden;
@@ -46,12 +46,12 @@ namespace Opium_NetStat.utils
                        
                     }
 
-                    //Get The Rows
+                    //Get The Row
                     string[] rows = Regex.Split(content, "\r\n");
                     foreach (string row in rows)
                     {
                         //Split it baby
-                        string[] tokens = Regex.Split(row, "\t");
+                        string[] tokens = Regex.Split(row, "\\s+");
                         if (tokens.Length > 4 && (tokens[1].Equals("UDP") || tokens[1].Equals("TCP")))
                         {
                             string localAddress = Regex.Replace(tokens[2], @"\[(.*?)\]", "1.1.1.1");
