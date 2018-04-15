@@ -1,7 +1,7 @@
 # OpiumNetStat
 Network Connections Monitor
 
-.NET 4.7 C# WPF Windows Desktop Client
+.NET 4.7 C# WPF Windows Desktop Client (Built with Visual Studio 17)
 
 This is a extended netstat aka Connection Monitor with GUI interface
 
