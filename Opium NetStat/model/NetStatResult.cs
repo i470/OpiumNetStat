@@ -55,6 +55,17 @@
                 RaisePropertyChanged(() => PortNormalyUsedBy);
             }
         }
+
+        private string _portOfficial;
+        public string PortOfficial
+        {
+            get => _portOfficial;
+            set
+            {
+                _portOfficial = value;
+                RaisePropertyChanged(() => PortOfficial);
+            }
+        }
         private string software;
         public string Software
         {

@@ -18,9 +18,10 @@
                 <DataGridTextColumn x:Name="Local_IP" Header="Local IP"  Binding="{Binding LocalIP}"/>
                 <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
                 <DataGridTextColumn x:Name="Origin" Header="Origin" Binding="{Binding Origin}"/>
-                <DataGridTextColumn x:Name="Port" Header="Port # " Binding="{Binding PortNumber}"/>
-                <DataGridTextColumn x:Name="Port_val" Header="Port Use" Binding="{Binding  PortNormalyUsedBy}"/>
-                <DataGridTextColumn x:Name="Sofwtawre" Header="Software" Binding="{Binding Software}"/>
+                <DataGridTextColumn x:Name="Port_Number" Header="PortInfo # " Binding="{Binding PortNumber}"/>
+                <DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding  PortNormalyUsedBy}"/>
+                <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding  PortOfficial}"/>
+                <DataGridTextColumn x:Name="Software" Header="Software" Binding="{Binding Software}"/>
                 <DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>
                 <DataGridTextColumn x:Name="Actions" Header="Actions"/>
             </DataGrid.Columns>
