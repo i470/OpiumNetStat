@@ -44,6 +44,18 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
+            <TabItem Header="TCP Global Parameters" DataContext="{Binding TcpGlobalParametersViewModel}" >
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid ItemsSource="{Binding TcpGlobalParameters}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="Parameter" Header="Parameter"  Binding="{Binding Parameter}">
+                                </DataGridTextColumn>
+                            
+                            <DataGridTextColumn x:Name="Status" Header="Status" Binding="{Binding Status}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
         </TabControl>
 
     </Grid>

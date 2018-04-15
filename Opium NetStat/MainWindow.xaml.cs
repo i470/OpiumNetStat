@@ -12,11 +12,7 @@ namespace Opium_NetStat
         {
             InitializeComponent();
 
-            var vm = new MainViewModel
-            {
-                NetStatVM = new NetStatViewModel()
-            };
-
+            var vm = new MainViewModel();
             this.DataContext = vm;
 
           

@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Opium_NetStat.viewmodel;
 
 namespace Opium_NetStat.utils
 {
@@ -79,7 +80,62 @@ namespace Opium_NetStat.utils
             catch (Exception) { procName = "-"; }
             return procName;
         }
-        
+
+        public static ObservableCollection<TcpGlobalParameter> GeTcpGlobalParameters()
+        {
+            var tcpGlobalParameters=new ObservableCollection<TcpGlobalParameter>();
+
+            using (var p = new Process())
+            {
+                var command = "netsh int tcp show global";
+                var ps = new ProcessStartInfo("cmd", "/c " + command)
+                {
+                    
+                    UseShellExecute = false,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
+
+                p.StartInfo = ps;
+                p.Start();
+
+                StreamReader stdOutput = p.StandardOutput;
+                StreamReader stdError = p.StandardError;
+
+                var content = stdOutput.ReadToEnd() + stdError.ReadToEnd();
+                var exitStatus = p.ExitCode.ToString();
+
+                if (exitStatus != "0")
+                {
+
+                }
+
+                var rows = Regex.Split(content, "\n");
+                var startRecording = false;
+
+                foreach (var row in rows)
+                {
+                    if (row.StartsWith("Receive"))
+                    {
+                        startRecording = true;
+                    }
+
+                    if (!startRecording) continue;
+
+                    var param = new TcpGlobalParameter();
+                    var data = row.Split(':');
+
+                    if (data.Length <= 1) continue;
+                    param.Parameter = data[0].Trim();
+                    param.Status = data[1].Trim();
+                    tcpGlobalParameters.Add(param);
+                }
+                return tcpGlobalParameters;
+            }
+        }
+
         public class Port
         {
             public string name
@@ -93,6 +149,12 @@ namespace Opium_NetStat.utils
             public string port_number { get; set; }
             public string process_name { get; set; }
             public string protocol { get; set; }
+        }
+
+        public class TcpGlobalParameter
+        {
+            public string Parameter { get; set; }
+            public string Status { get; set; }
         }
     }
 }

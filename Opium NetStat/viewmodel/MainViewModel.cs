@@ -31,6 +31,19 @@ namespace Opium_NetStat.viewmodel
 
         public NetStatViewModel NetStatVM { get; set; }
 
+        private TcpGlobalParametersViewModel tcpGlobalParametersViewModel;
+
+        public TcpGlobalParametersViewModel TcpGlobalParametersViewModel
+        {
+
+            get => tcpGlobalParametersViewModel;
+            set
+            {
+                tcpGlobalParametersViewModel = value;
+                RaisePropertyChanged(() => TcpGlobalParametersViewModel);
+            }
+        }
+
         public MainViewModel()
         {
           
@@ -39,19 +52,19 @@ namespace Opium_NetStat.viewmodel
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), @"assets\know-ports.json");
             
             // deserialize JSON directly from a file
-            using (StreamReader file = File.OpenText(path))
+            using (var file = File.OpenText(path))
             {
-                JsonSerializer serializer = new JsonSerializer();
+                var serializer = new JsonSerializer();
                 KnownPorts = (List<PortInfo>) serializer.Deserialize(file,typeof(List<PortInfo>));
             }
 
-            NetStatsNetStatResults = getIPConnections();
+            NetStatsNetStatResults = GetIpConnections();
             NetStatVM=new NetStatViewModel();
-
+            TcpGlobalParametersViewModel = new TcpGlobalParametersViewModel();
         }
 
 
-        public ObservableCollection<NetStatResult> getIPConnections()
+        public ObservableCollection<NetStatResult> GetIpConnections()
         {
             netStatResults = new ObservableCollection<NetStatResult>();
 

@@ -93,6 +93,7 @@
     <Compile Include="utils\ProcessInformation.cs" />
     <Compile Include="viewmodel\MainViewModel.cs" />
     <Compile Include="viewmodel\NetStatViewModel.cs" />
+    <Compile Include="viewmodel\TCPGlobalParametersViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
