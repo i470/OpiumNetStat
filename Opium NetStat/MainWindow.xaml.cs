@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Opium_NetStat.viewmodel;
 
 namespace Opium_NetStat
 {
@@ -10,6 +11,9 @@ namespace Opium_NetStat
         public MainWindow()
         {
             InitializeComponent();
+            MainViewModel vm = new MainViewModel();
+            this.DataContext = vm;
+
         }
     }
 }

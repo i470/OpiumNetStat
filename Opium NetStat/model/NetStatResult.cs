@@ -79,12 +79,3 @@
     }
 }
 
-
-//<DataGridTextColumn x:Name="Local_IP" Header="Local IP" />
-//<DataGridTextColumn x:Name="Remote_IP" Header="Remote IP"/>
-//<DataGridTextColumn x:Name="Origin" Header="Origin"/>
-//<DataGridTextColumn x:Name="Port" Header="Port #"/>
-//<DataGridTextColumn x:Name="Port_val" Header="Port Use"/>
-//<DataGridTextColumn x:Name="Sofwtawre" Header="Software"/>
-//<DataGridTextColumn x:Name="ConnectionStatus" Header="Status"/>
-//<DataGridTextColumn x:Name="Actions" Header="Actions"/>

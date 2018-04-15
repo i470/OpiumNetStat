@@ -88,6 +88,7 @@
     <Compile Include="utils\IActionCommand.cs" />
     <Compile Include="utils\IEventAggregator.cs" />
     <Compile Include="utils\Helper.cs" />
+    <Compile Include="viewmodel\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -134,7 +135,6 @@
     <Resource Include="assets\if_JD-32_2625504.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="viewmodel\" />
     <Folder Include="view\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

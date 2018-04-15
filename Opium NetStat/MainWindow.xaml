@@ -13,18 +13,19 @@
             <RowDefinition Height="46"/>
         </Grid.RowDefinitions>
         <StatusBar Grid.Row="2"/>
-        <DataGrid Grid.Row="1" Grid.RowSpan="2">
+        <DataGrid Grid.Row="1" Grid.RowSpan="2" ItemsSource="{Binding NetStatsNetStatResults}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Local_IP" Header="Local IP" />
-                <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP"/>
-                <DataGridTextColumn x:Name="Origin" Header="Origin"/>
-                <DataGridTextColumn x:Name="Port" Header="Port #"/>
-                <DataGridTextColumn x:Name="Port_val" Header="Port Use"/>
-                <DataGridTextColumn x:Name="Sofwtawre" Header="Software"/>
-                <DataGridTextColumn x:Name="ConnectionStatus" Header="Status"/>
+                <DataGridTextColumn x:Name="Local_IP" Header="Local IP"  Binding="{Binding LocalIP}"/>
+                <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
+                <DataGridTextColumn x:Name="Origin" Header="Origin" Binding="{Binding Origin}"/>
+                <DataGridTextColumn x:Name="Port" Header="Port # " Binding="{Binding PortNumber}"/>
+                <DataGridTextColumn x:Name="Port_val" Header="Port Use" Binding="{Binding  PortNormalyUsedBy}"/>
+                <DataGridTextColumn x:Name="Sofwtawre" Header="Software" Binding="{Binding Software}"/>
+                <DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>
                 <DataGridTextColumn x:Name="Actions" Header="Actions"/>
             </DataGrid.Columns>
         </DataGrid>
 
     </Grid>
 </Window>
+
