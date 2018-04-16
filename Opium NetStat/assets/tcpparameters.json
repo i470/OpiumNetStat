@@ -1,0 +1,11 @@
+﻿{
+  "parameter": {
+    "name": "Receive-Side Scaling Name",
+    "description": ""
+  },
+
+  "name": "Chimney Offload State",
+  "description": "TCP Chimney Offload is a networking technology that helps transfer the workload from the CPU to a network adapter during network data transfer. TCP Chimney Offload enables the Windows networking subsystem to offload the processing of a TCP/IP connection to a network adapter that includes special support for TCP/IP offload processing. When in InHost means that the feature is disabled and offloading is not occuring"
+
+
+}
