@@ -1,11 +1,15 @@
 ﻿{
   "parameter": {
-    "name": "Receive-Side Scaling Name",
-    "description": ""
+    "name": "Receive-Side Scaling State",
+    "description": "Receive side scaling (RSS) is a network driver technology that enables the efficient distribution of network receive processing across multiple CPUs in multiprocessor systems."
   },
-
-  "name": "Chimney Offload State",
-  "description": "TCP Chimney Offload is a networking technology that helps transfer the workload from the CPU to a network adapter during network data transfer. TCP Chimney Offload enables the Windows networking subsystem to offload the processing of a TCP/IP connection to a network adapter that includes special support for TCP/IP offload processing. When in InHost means that the feature is disabled and offloading is not occuring"
-
+  "parmeter": {
+    "name": "Chimney Offload State",
+    "description": "TCP Chimney Offload is a networking technology that helps transfer the workload from the CPU to a network adapter during network data transfer. TCP Chimney Offload enables the Windows networking subsystem to offload the processing of a TCP/IP connection to a network adapter that includes special support for TCP/IP offload processing. When in InHost means that the feature is disabled and offloading is not occuring"
+  },
+  "parmeter": {
+    "name": "NetDMA State",
+    "description": "When the networking card receives data from the wire, it performs a DMA transfer to copy it into system memory. It then informs the networking stack that a certain number of received packets are ready for processing, most commonly by raising an interrupt. When the networking stack processes the packets, it copies the data into buffers posted by the application waiting for it. This second copy operation is performed by the CPU, which means that receive processing can be a CPU-intensive task."
+  }
 
 }

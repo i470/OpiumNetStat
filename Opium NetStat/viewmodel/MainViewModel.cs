@@ -7,9 +7,12 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media.TextFormatting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Opium_NetStat.model;
+using Opium_NetStat.utils;
 
 namespace Opium_NetStat.viewmodel
 {
@@ -27,7 +30,19 @@ namespace Opium_NetStat.viewmodel
             }
         }
 
+        private bool isCommandToHide;
+        public bool IsCommandToHide
+        {
+            get => isCommandToHide;
+            set
+            {
+                isCommandToHide = value;
+                RaisePropertyChanged(() => IsCommandToHide);
+            }
+        }
         List<PortInfo> KnownPorts;
+
+        public ICommand HideHTTPCommand { get; set; }
 
         public NetStatViewModel NetStatVM { get; set; }
 
@@ -61,6 +76,34 @@ namespace Opium_NetStat.viewmodel
             NetStatsNetStatResults = GetIpConnections();
             NetStatVM=new NetStatViewModel();
             TcpGlobalParametersViewModel = new TcpGlobalParametersViewModel();
+            HideHTTPCommand=new ActionCommand<object>(HideHTTP);
+        }
+
+        
+
+        private void HideHTTP(object o)
+        {
+            var tmp = new ObservableCollection<NetStatResult>();
+
+            var isCommandToHide = (bool) o;
+
+            if (isCommandToHide)
+            {
+                foreach (var r in NetStatsNetStatResults.Where(x=>x.PortNumber!=443).Where(x=>x.PortNumber!=80))
+                {
+
+                        tmp.Add(r);
+                
+                }
+            }
+            else
+            {
+                tmp = GetIpConnections();
+            }
+          
+          
+
+            NetStatsNetStatResults = tmp;
         }
 
 
