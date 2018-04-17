@@ -13,12 +13,15 @@
             <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <StatusBar Grid.Row="2" Margin="0,0.333,0.333,-0.333"/>
-        <CheckBox Content="Hide HTTP/HTTPS connections"  Grid.Row="0"
-                  HorizontalAlignment="Left"  VerticalAlignment="Top" 
-                  Height="15" 
-                  IsChecked="{Binding IsCommandToHide}"
-                  Command="{Binding HideHTTPCommand}" CommandParameter="{Binding IsCommandToHide}" Margin="21,18,0,0"
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <CheckBox Content="Hide HTTP/HTTPS connections"
+                HorizontalAlignment="Left"  VerticalAlignment="Center"
+                Height="15" Margin="20,0,10,0"
+                IsChecked="{Binding IsCommandToHide}"
+                Command="{Binding HideHTTPCommand}" CommandParameter="{Binding IsCommandToHide}"
                   />
+            <Button Command="{Binding RefreshCommand}" Content="Resfresh" Height="24" Width="70"  Margin="20,0,10,0"/>
+        </StackPanel>
         <TabControl x:Name="NetStatTabControl" Grid.Row="1" Margin="0">
             <TabItem Header="Active Connections" >
                 <Grid Background="#FFE5E5E5">

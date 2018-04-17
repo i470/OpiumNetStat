@@ -43,6 +43,7 @@ namespace Opium_NetStat.viewmodel
         List<PortInfo> KnownPorts;
 
         public ICommand HideHTTPCommand { get; set; }
+        public ICommand RefreshCommand { get; set; }
 
         public NetStatViewModel NetStatVM { get; set; }
 
@@ -76,18 +77,22 @@ namespace Opium_NetStat.viewmodel
             NetStatsNetStatResults = GetIpConnections();
             NetStatVM=new NetStatViewModel();
             TcpGlobalParametersViewModel = new TcpGlobalParametersViewModel();
+
             HideHTTPCommand=new ActionCommand<object>(HideHTTP);
+            RefreshCommand=new ActionCommand<object>(Refresh);
         }
 
-        
+        private void Refresh(object obj)
+        {
+            HideHTTP(obj);
+        }
+
 
         private void HideHTTP(object o)
         {
             var tmp = new ObservableCollection<NetStatResult>();
-
-            var isCommandToHide = (bool) o;
-
-            if (isCommandToHide)
+            
+            if (IsCommandToHide)
             {
                 foreach (var r in NetStatsNetStatResults.Where(x=>x.PortNumber!=443).Where(x=>x.PortNumber!=80))
                 {
