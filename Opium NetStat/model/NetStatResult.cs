@@ -1,4 +1,6 @@
-﻿namespace Opium_NetStat.model
+﻿using System;
+
+namespace Opium_NetStat.model
 {
     public class NetStatResult : BaseNotify
     {
@@ -86,6 +88,17 @@
                 RaisePropertyChanged(() => ConnectionStatus);
             }
         }
+
+
+        public string Status { get; set; }
+        public string Country { get; set; }
+        public string CountryCode { get; set; }
+        public string Region { get; set; }
+        public string City { get; set; }
+        public string Org { get; set; }
+
+        public DateTime LastSeen { get; set; }
+        
 
     }
 }

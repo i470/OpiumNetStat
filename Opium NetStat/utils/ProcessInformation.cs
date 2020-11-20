@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Channels;
@@ -10,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Opium_NetStat.viewmodel;
+using Microsoft.Diagnostics.Tracing.Parsers;
+using Microsoft.Diagnostics.Tracing.Session;
 
 namespace Opium_NetStat.utils
 {
@@ -76,10 +79,30 @@ namespace Opium_NetStat.utils
         public static string LookupProcess(int pid)
         {
             string procName;
-            try { procName = Process.GetProcessById(pid).ProcessName; }
-            catch (Exception) { procName = "-"; }
-            return procName;
+            try {
+
+                NetworkInfo ni = new NetworkInfo(pid);
+
+                var proc = Process.GetProcessById(pid);
+
+                Icon ico = Icon.ExtractAssociatedIcon(proc.MainModule.FileName);
+                procName = proc.ProcessName;
+
+
+                var data = ni.m_Counters;
+
+                return procName;
+            }
+            catch (Exception ex) 
+            {
+                Debug.WriteLine(ex.Message);
+            
+            }
+
+            return string.Empty;
         }
+
+
 
         public static ObservableCollection<TcpGlobalParameter> GeTcpGlobalParameters()
         {
@@ -138,23 +161,92 @@ namespace Opium_NetStat.utils
 
         public class Port
         {
-            public string name
-            {
-                get
-                {
-                    return string.Format("{0} ({1} port {2})", this.process_name, this.protocol, this.port_number);
-                }
-                set { }
-            }
+            public string name { get; set; }
             public string port_number { get; set; }
             public string process_name { get; set; }
             public string protocol { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0} ({1} port {2})", this.process_name, this.protocol, this.port_number);
+            }
         }
 
         public class TcpGlobalParameter
         {
             public string Parameter { get; set; }
             public string Status { get; set; }
+        }
+    }
+
+    public class Counters
+    {
+        public long Received;
+        public long Sent;
+    }
+
+
+    public class NetworkInfo
+    {
+        private DateTime m_EtwStartTime;
+        private TraceEventSession m_EtwSession;
+        private int pid;
+        public readonly Counters m_Counters = new Counters();
+
+
+
+
+        
+        public NetworkInfo(int pid)
+        {
+            this.pid = pid;
+        }
+
+        private void Initialise()
+        {
+            // Note that the ETW class blocks processing messages, so should be run on a different thread if you want the application to remain responsive.
+            Task.Run(() => StartEtwSession(this.pid));
+        }
+
+        public void  StartEtwSession(int pid)
+        {
+            try
+            {
+                var processId = pid;
+               
+                using (m_EtwSession = new TraceEventSession("MyKernelAndClrEventsSession"))
+                {
+                    m_EtwSession.EnableKernelProvider(KernelTraceEventParser.Keywords.NetworkTCPIP);
+
+                    m_EtwSession.Source.Kernel.TcpIpRecv += data =>
+                    {
+                        if (data.ProcessID == processId)
+                        {
+                            lock (m_Counters)
+                            {
+                                m_Counters.Received += data.size;
+                            }
+                        }
+                    };
+
+                    m_EtwSession.Source.Kernel.TcpIpSend += data =>
+                    {
+                        if (data.ProcessID == processId)
+                        {
+                            lock (m_Counters)
+                            {
+                                m_Counters.Sent += data.size;
+                            }
+                        }
+                    };
+
+                    m_EtwSession.Source.Process();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+            }
         }
     }
 }
