@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpiumNetStat", "Opium NetStat\OpiumNetStat.csproj", "{FD490215-CC7D-477E-8E8D-140F930C52BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpiumNetStat", "OpiumNetStat\OpiumNetStat.csproj", "{FD490215-CC7D-477E-8E8D-140F930C52BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
