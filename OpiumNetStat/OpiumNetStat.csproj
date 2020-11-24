@@ -173,6 +173,7 @@
     <Compile Include="model\PortInfo.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="services\ConnectionsService.cs" />
+    <Compile Include="services\DataBaseService.cs" />
     <Compile Include="services\IConnectionsService.cs" />
     <Compile Include="utils\ActionCommand.cs" />
     <Compile Include="utils\EventAggregator.cs" />
@@ -232,9 +233,7 @@
     <None Include="assets\ports.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="db\netstat.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="db\netstat.db" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -1,9 +1,23 @@
 ﻿using System;
+using System.Net.NetworkInformation;
 
 namespace OpiumNetStat.model
 {
     public class NetStatResult : BaseNotify
     {
+        public NetStatResult()
+        {
+            LastSeen = DateTime.Now;
+        }
+        public NetStatResult(TcpConnectionInformation tcp)
+        {
+            LocalIP = tcp.LocalEndPoint.Address.ToString();
+            RemoteIP = tcp.RemoteEndPoint.Address.ToString();
+            ConnectionStatus = tcp.State.ToString();
+            PortNumber = (short)tcp.RemoteEndPoint.Port;
+            LastSeen = DateTime.Now;
+        }
+
         private string localIP;
         public string LocalIP
         {

@@ -20,12 +20,12 @@ namespace OpiumNetStat.services
         CancellationTokenSource wtoken;
         ActionBlock<DateTimeOffset> task;
         ConcurrentDictionary<string, NetStatResult> _netStatCollection;
-
+        DataBaseService _db;
 
         public ConnectionsService(IEventAggregator ea)
         {
             _ea = ea;
-           
+            _db = new DataBaseService();
         }
 
 
@@ -33,69 +33,55 @@ namespace OpiumNetStat.services
         {
             _netStatCollection = new ConcurrentDictionary<string, NetStatResult>();
 
+
             wtoken = new CancellationTokenSource();
-            task = (ActionBlock<DateTimeOffset>)CreateNeverEndingTask(now => DoWorkAsync(), wtoken.Token);
+            task = (ActionBlock<DateTimeOffset>)CreateNeverEndingTask(async now => await DoWorkAsync(), wtoken.Token);
             task.Post(DateTimeOffset.Now);
         }
 
         private async Task DoWorkAsync()
         {
+
+
             var ip = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties();
 
-             using (var db = new LiteDatabase(DB.Path))
+
+
+            foreach (var tcp in ip.GetActiveTcpConnections())
             {
-                var col = db.GetCollection<NetStatResult>(DB.CollConnections);
-
-
-
-                foreach (var tcp in ip.GetActiveTcpConnections())
+                if (!tcp.RemoteEndPoint.Address.ToString().Equals("127.0.0.1"))
                 {
-                    if (!tcp.RemoteEndPoint.Address.ToString().Equals("127.0.0.1"))
+
+                    var record = _db.GetNetStatRecord(tcp.RemoteEndPoint.Address.ToString());
+
+                    if (record is null)
                     {
-                        var exist = col.Exists(x => x.RemoteIP.Equals(tcp.RemoteEndPoint.Address.ToString()));
 
-                        var record = col.Query().Where(x => x.RemoteIP.Equals(tcp.RemoteEndPoint.Address.ToString())).FirstOrDefault();
+                        record = new NetStatResult(tcp);
 
-                        if (record is null)
-                        {
-
-                            record = new NetStatResult
-                            {
-                                LocalIP = tcp.LocalEndPoint.Address.ToString(),
-                                RemoteIP = tcp.RemoteEndPoint.Address.ToString(),
-                                ConnectionStatus = tcp.State.ToString(),
-                                PortNumber = (short)tcp.RemoteEndPoint.Port,
-                                LastSeen = DateTime.Now
-                              
-                            };
-
-
-                        }
-                        else
-                        {
-                            record.LastSeen = DateTime.Now;
-                            record.ConnectionStatus = tcp.State.ToString();
-                        }
-
-                        if (string.IsNullOrEmpty(record.Country))
-                        {
-                           record = await _updateIpGeoAsync(record, tcp.RemoteEndPoint.Address);
-
-                        }
-
-                        col.Upsert(record);
-                        col.EnsureIndex(x => x.RemoteIP);
-
-                         record = col.Query().Where(x => x.RemoteIP.Equals(tcp.RemoteEndPoint.Address.ToString())).FirstOrDefault();
-                        _ea.GetEvent<ConnectionUpdateEvent>().Publish(record);
+                    }
+                    else
+                    {
+                        record.LastSeen = DateTime.Now;
+                        record.ConnectionStatus = tcp.State.ToString();
                     }
 
+                    if (string.IsNullOrEmpty(record.Country))
+                    {
+                        record = await _updateIpGeoAsync(record);
 
+                    }
+
+                    _db.Upsert(record);
+                    _ea.GetEvent<ConnectionUpdateEvent>().Publish(record);
                 }
+
+
             }
+
         }
 
-        private async Task<NetStatResult> _updateIpGeoAsync(NetStatResult record, IPAddress ip)
+        private async Task<NetStatResult> _updateIpGeoAsync(NetStatResult record)
         {
 
             using (var client = new WebClient())
@@ -112,7 +98,7 @@ namespace OpiumNetStat.services
                     record.Country = result.Country;
                     record.Org = result.Org;
                     record.CountryCode = result.CountryCode;
-                                    
+
 
                     return record;
                 }
@@ -152,7 +138,7 @@ namespace OpiumNetStat.services
             {
 
                 action(now);
-                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
                 block.Post(DateTimeOffset.Now);
             },
             new ExecutionDataflowBlockOptions
@@ -163,5 +149,23 @@ namespace OpiumNetStat.services
             return block;
         }
 
+        public void Get24HourDataAsync()
+        {
+            using (var db = new LiteDatabase(DB.Path))
+            {
+                var col = db.GetCollection<NetStatResult>(DB.CollConnections);
+
+                var data = col.FindAll().ToList();
+
+                foreach (var record in data)
+                {
+
+
+                    _ea.GetEvent<ConnectionUpdateEvent>().Publish(record);
+                }
+
+            }
+
+        }
     }
 }

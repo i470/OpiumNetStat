@@ -12,8 +12,6 @@ namespace OpiumNetStat.Views
         {
             InitializeComponent();
 
-            //var vm = new MainViewModel();
-            //this.DataContext = vm;
             regionManager.RegisterViewWithRegion("ContentRegion", typeof(ConnectionsView));
 
 

@@ -30,18 +30,9 @@ namespace OpiumNetStat.ViewModels
 
             NetStat = new ObservableCollection<NetStatResult>();
 
-            using (var db = new LiteDatabase(DB.Path))
-            {
-                var coll = db.GetCollection<NetStatResult>(DB.CollConnections);
-                var last24Hours = DateTime.Now.AddHours(-24);
-
-                var dayRecords = coll.FindAll().ToList();
-                //.Where(x => x.LastSeen > last24Hours).OrderByDescending(x=>x.LastSeen).ToList();
-                NetStat = new ObservableCollection<NetStatResult>(dayRecords);
-            }
-
-             _ea.GetEvent<ConnectionUpdateEvent>().Subscribe(UpdateConnections, ThreadOption.UIThread);
-             _cs.StartWork();
+            _ea.GetEvent<ConnectionUpdateEvent>().Subscribe(UpdateConnections, ThreadOption.UIThread);
+           // _cs.Get24HourData();
+            _cs.StartWork();
           
         }
 
