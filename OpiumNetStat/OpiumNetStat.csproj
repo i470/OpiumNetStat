@@ -179,6 +179,7 @@
     <Compile Include="RegionNames.cs" />
     <Compile Include="services\ConnectionsService.cs" />
     <Compile Include="services\DataBaseService.cs" />
+    <Compile Include="services\DataPipeLineService.cs" />
     <Compile Include="services\IConnectionsService.cs" />
     <Compile Include="services\IDataBaseService.cs" />
     <Compile Include="services\IIpInfoService.cs" />
