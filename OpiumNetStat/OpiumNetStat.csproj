@@ -172,8 +172,10 @@
     <Compile Include="events\NetStatReadEvent.cs" />
     <Compile Include="model\Host.cs" />
     <Compile Include="model\PortInfo.cs" />
-    <Compile Include="Pipeline\IPipline.cs" />
+    <Compile Include="Pipeline\IPipeLine.cs" />
     <Compile Include="Pipeline\PipelineAction.cs" />
+    <Compile Include="Pipeline\PipeLineController.cs" />
+    <Compile Include="Pipeline\PipelineEvent.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="services\ConnectionsService.cs" />
     <Compile Include="services\DataBaseService.cs" />

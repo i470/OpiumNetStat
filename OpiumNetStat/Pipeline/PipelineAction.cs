@@ -2,7 +2,7 @@
 
 namespace OpiumNetStat.Pipeline
 {
-    public class PipelineAction: IPipline
+    public class PipelineAction: IPipeLine
     {
       
         private readonly bool _immediate;
@@ -38,6 +38,7 @@ namespace OpiumNetStat.Pipeline
         public void Invoke()
         {
             Execute();
+
             if (_immediate)
             {
                 Invoked();

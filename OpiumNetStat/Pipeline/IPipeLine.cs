@@ -2,7 +2,7 @@
 
 namespace OpiumNetStat.Pipeline
 {
-    public interface IPipline
+    public interface IPipeLine
     {
 
         void Invoke();
