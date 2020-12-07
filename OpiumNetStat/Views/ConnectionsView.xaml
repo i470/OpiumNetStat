@@ -12,6 +12,7 @@
         <Grid Background="#FFE5E5E5">
             <DataGrid ItemsSource="{Binding NetStat}" AutoGenerateColumns="false">
                 <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="App" Header="App" Binding="{Binding Software}"/>
                      <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
                     <DataGridTextColumn x:Name="Host" Header="Host"  Binding="{Binding Host}"/>
                     <DataGridTextColumn x:Name="Org" Header="Org" Binding="{Binding Org}"/>

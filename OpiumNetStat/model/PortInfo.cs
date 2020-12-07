@@ -1,27 +1,24 @@
 ﻿using Newtonsoft.Json;
 
-namespace OpiumNetStat.model
+namespace OpiumNetStat.Model
 {
     public class PortInfo
     {
-        [JsonProperty("description")]
-        public string Desciption;
-
-        [JsonProperty("port-start")]
-        public string PortStart;
-
-        [JsonProperty("port-end")]
-        public string PortEnd;
-
-        [JsonProperty("status")]
-        public string Status;
-
-        [JsonProperty("tcp")]
-        public string Tcp;
-
-        [JsonProperty("udp")]
-        public string Udp;
+        public string name
+        {
+            get
+            {
+                return string.Format("{0} {1} {2} {3}", this.remote_ip, this.process_name, this.protocol, this.port_number);
+            }
+            set { }
+        }
+        public string port_number { get; set; }
+        public string process_name { get; set; }
+        public string protocol { get; set; }
+        public string remote_ip { get; set; }
     }
 
-    
+
+
+
 }

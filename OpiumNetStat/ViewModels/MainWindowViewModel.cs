@@ -66,7 +66,8 @@ namespace OpiumNetStat.ViewModels
         public MainWindowViewModel(IEventAggregator ea, IConnectionsService cs)
         {
 
-           
+
+            NetStatService.GetNetStatPorts();
 
 
             //string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), @"assets\know-ports.json");

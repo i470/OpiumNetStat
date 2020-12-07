@@ -18,6 +18,7 @@ namespace OpiumNetStat
         {
             
             containerRegistry.RegisterSingleton<IConnectionsService, ConnectionsService>();
+            containerRegistry.Register<IIpInfoService, IpInfoService>();
         }
 
 

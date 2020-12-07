@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace OpiumNetStat.services
 {
-    public class DataBaseService
+    public class DataBaseService : IDataBaseService
     {
 
         public bool RemoteIpExists(string ip)
@@ -19,7 +19,7 @@ namespace OpiumNetStat.services
                 var col = db.GetCollection<NetStatResult>(DB.CollConnections);
                 exist = col.Exists(x => x.RemoteIP.Equals(ip.Trim()));
             }
-           
+
             return exist;
         }
 
@@ -32,7 +32,7 @@ namespace OpiumNetStat.services
                 var col = db.GetCollection<NetStatResult>(DB.CollConnections);
                 return col.Query().Where(x => x.RemoteIP.Equals(ip)).FirstOrDefault();
             }
-            
+
         }
 
 
@@ -50,7 +50,8 @@ namespace OpiumNetStat.services
                 {
                     col.Upsert(netStat);
 
-                }else
+                }
+                else
                 {
                     result = netStat;
                     col.Upsert(result);
@@ -64,13 +65,13 @@ namespace OpiumNetStat.services
         }
 
 
-       public  List<NetStatResult> Get24HourDataAsync()
+        public List<NetStatResult> Get24HourDataAsync()
         {
             using (var db = new LiteDatabase(DB.Path))
             {
                 var col = db.GetCollection<NetStatResult>(DB.CollConnections);
 
-                var data = col.FindAll().Where(x =>x.LastSeen>DateTime.Now.AddHours(-24)).ToList();
+                var data = col.FindAll().Where(x => x.LastSeen > DateTime.Now.AddHours(-24)).ToList();
 
                 return data;
 

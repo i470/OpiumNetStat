@@ -1,11 +1,11 @@
-﻿using LiteDB;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OpiumNetStat.events;
 using OpiumNetStat.model;
 using Prism.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -20,12 +20,12 @@ namespace OpiumNetStat.services
         CancellationTokenSource wtoken;
         ActionBlock<DateTimeOffset> task;
         ConcurrentDictionary<string, NetStatResult> _netStatCollection;
-        DataBaseService _db;
+      
 
         public ConnectionsService(IEventAggregator ea)
         {
             _ea = ea;
-            _db = new DataBaseService();
+
         }
 
 
@@ -35,81 +35,68 @@ namespace OpiumNetStat.services
 
 
             wtoken = new CancellationTokenSource();
-            task = (ActionBlock<DateTimeOffset>)CreateNeverEndingTask(async now => await DoWorkAsync(), wtoken.Token);
+            task = (ActionBlock<DateTimeOffset>)CreateNeverEndingTask( now =>  DoWorkAsync(), wtoken.Token);
             task.Post(DateTimeOffset.Now);
         }
 
-        private async Task DoWorkAsync()
+        private  void DoWorkAsync()
         {
+           var ports =  NetStatService.GetNetStatPorts();
+
+            _ea.GetEvent<NetStatReadEvent>().Publish(ports);
 
 
-            var ip = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties();
+            //var ip = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties();
+
+            //var pids =  NetStatService.GetNetStatPorts();
+
+            //foreach (var tcp in ip.GetActiveTcpConnections())
+            //{
+            //    if (!tcp.RemoteEndPoint.Address.ToString().Equals("127.0.0.1"))
+            //    {
+
+            //        var record = _db.GetNetStatRecord(tcp.RemoteEndPoint.Address.ToString());
+
+            //        if (record is null)
+            //        {
+
+            //            record = new NetStatResult(tcp);
+
+            //        }
+            //        else
+            //        {
+            //            record.LastSeen = DateTime.Now;
+            //            record.ConnectionStatus = tcp.State.ToString();
+            //        }
+
+            //        if (string.IsNullOrEmpty(record.Country))
+            //        {
+
+            //            record = await _updateIpGeoAsync(record);
+
+            //        }
 
 
+            //        //find matching pid
 
-            foreach (var tcp in ip.GetActiveTcpConnections())
-            {
-                if (!tcp.RemoteEndPoint.Address.ToString().Equals("127.0.0.1"))
-                {
+            //        var pid = pids.Where(x=>x.remote_ip.Trim().Equals(record.RemoteIP)).First();
+            //        if(!(pid is null))
+            //        {
+            //            record.PortNumber = Int16.Parse(pid.port_number);
+            //            record.Software = pid.process_name;
 
-                    var record = _db.GetNetStatRecord(tcp.RemoteEndPoint.Address.ToString());
+            //        }
 
-                    if (record is null)
-                    {
-
-                        record = new NetStatResult(tcp);
-
-                    }
-                    else
-                    {
-                        record.LastSeen = DateTime.Now;
-                        record.ConnectionStatus = tcp.State.ToString();
-                    }
-
-                    if (string.IsNullOrEmpty(record.Country))
-                    {
-                        record = await _updateIpGeoAsync(record);
-
-                    }
-
-                    _db.Upsert(record);
-                    _ea.GetEvent<ConnectionUpdateEvent>().Publish(record);
-                }
+            //        _db.Upsert(record);
+            //        _ea.GetEvent<ConnectionUpdateEvent>().Publish(record);
+            //    }
 
 
-            }
+            //}
 
         }
 
-        private async Task<NetStatResult> _updateIpGeoAsync(NetStatResult record)
-        {
 
-            using (var client = new WebClient())
-            {
-                try
-                {
-                    var uri = new Uri($"http://ip-api.com/json/{record.RemoteIP}");
-
-
-                    var json = await client.DownloadStringTaskAsync(uri);
-                    var result = JsonConvert.DeserializeObject<Host>(json);
-
-                    record.City = result.City;
-                    record.Country = result.Country;
-                    record.Org = result.Org;
-                    record.CountryCode = result.CountryCode;
-
-
-                    return record;
-                }
-                catch (Exception ex)
-                {
-                    Thread.Sleep(100);
-                    return record;
-                }
-
-            }
-        }
 
 
         void StopWork()
