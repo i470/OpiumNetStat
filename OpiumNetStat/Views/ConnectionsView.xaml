@@ -5,11 +5,68 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpiumNetStat.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Aqua">
-        <Grid Background="#FFE5E5E5">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="SeparatorBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="#777783"/>
+            <Setter Property="Foreground" Value="WhiteSmoke"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style x:Key="HeadingLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#777783"/>
+            <Setter Property="FontWeight" Value="ExtraBold"/>
+            <Setter Property="Padding" Value="0,0,15,0"/>
+        </Style>
+
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="AlternatingRowBackground" Value="#FFE2EEF3"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Foreground" Value="#FF0F0F0F"/>
+                         <Setter Property="Padding" Value="5" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="FontSize" Value="11"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Padding="{TemplateBinding Padding}" 
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid>
+      
+        <Grid>
             <DataGrid ItemsSource="{Binding NetStat}" AutoGenerateColumns="false">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="App" Header="App" Binding="{Binding Software}"/>
@@ -18,10 +75,22 @@
                     <DataGridTextColumn x:Name="Org" Header="Org" Binding="{Binding Org}"/>
                     <DataGridTextColumn x:Name="Country" Header="Origin" Binding="{Binding CountryCode}"/>
                     <DataGridTextColumn x:Name="Port_Number" Header="PortInfo # " Binding="{Binding PortNumber}"/>
-                    <DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding PortNormalyUsedBy}"/>
-                    <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding PortOfficial}"/>
+                    <!--<DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding PortNormalyUsedBy}"/>
+                    <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding PortOfficial}"/>-->
                     <DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>
                     <DataGridTextColumn x:Name="Actions" Header="LastSeen"  Binding="{Binding LastSeen, StringFormat=t}"/>
+                    <DataGridTemplateColumn x:Name="Firewall" Header="Block on a Firewall">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <Button Style="{StaticResource RowButton}" >
+                                        <fa:FontAwesome Icon="ToggleOn"/>
+                                    </Button>
+
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

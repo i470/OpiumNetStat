@@ -69,6 +69,9 @@
       <HintPath>..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.2.0.62\lib\net45\Dia2Lib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="HBD.Framework, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HBD.Framework.2.0.0\lib\net452\HBD.Framework.dll</HintPath>
     </Reference>
@@ -172,6 +175,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controls\ControlExtension.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="events\ConnectionUpdateEvent.cs" />
     <Compile Include="events\ExceptionEvent.cs" />

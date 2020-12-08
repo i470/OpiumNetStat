@@ -81,7 +81,7 @@ namespace OpiumNetStat.ViewModels
 
                 if (existing is null)
                 {
-                    net.ConnectionStatus = "Closed";
+                   // net.ConnectionStatus = "Closed";
 
                 }
                 else
