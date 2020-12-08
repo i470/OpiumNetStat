@@ -99,7 +99,7 @@ namespace OpiumNetStat.services
             {
                 foreach (var ip in portlist.Where(x=>!x.remote_ip.Equals("127.0.0.1")))
                 {
-                    if(!ip.remote_ip.StartsWith("192.") || !ip.remote_ip.StartsWith("10."))
+                    if(!ip.remote_ip.StartsWith("192") &&  !ip.remote_ip.StartsWith("10."))
                     {
                         var record = netStatList.Where(x => x.RemoteIP.Equals(ip.remote_ip.Trim())).FirstOrDefault();
 

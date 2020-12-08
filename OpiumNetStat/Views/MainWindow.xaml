@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:OpiumNetStat"
         Style="{StaticResource WindowStyle}"
         mc:Ignorable="d"
-        Title="Opium Netstat - Network Monitor" Height="545.735" Width="900" Icon="/OpiumNetStat;component/assets/spaceinvaders_104010.ico">
+        Title="Opium Netstat - Network Monitor" Height="800" Width="900" Icon="/OpiumNetStat;component/assets/spaceinvaders_104010.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome 
             CaptionHeight="0"
