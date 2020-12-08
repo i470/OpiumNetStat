@@ -6,6 +6,4 @@ Network Connections Monitor
 This is a extended netstat aka Connection Monitor with GUI interface
 
  
-![alt text](https://github.com/r0otChiXor/OpiumNetStat/blob/master/Opium%20NetStat/assets/active-connections-view.png "Active connections tab")
-
-![alt text](https://github.com/r0otChiXor/OpiumNetStat/blob/master/Opium%20NetStat/assets/netstat-tab.png "NetStat tab")
+![Opium NetStat](https://github.com/i470/OpiumNetStat/blob/master/wpf-opium-netstat-network-monitor-privacy-firewall.png "Privacy Connections Monitor and Firewall")
