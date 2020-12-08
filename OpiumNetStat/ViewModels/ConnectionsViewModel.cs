@@ -91,7 +91,7 @@ namespace OpiumNetStat.ViewModels
                 }
             }
 
-
+            NetStat = new ObservableCollection<NetStatResult>(NetStat.OrderByDescending(x => x.LastSeen).ToList());
 
             //var orderedList = tmpList.OrderByDescending(x => x.LastSeen).ToList();
             // NetStat.OrderByDescending(x => x.LastSeen).ToList();

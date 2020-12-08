@@ -7,20 +7,42 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:local="clr-namespace:OpiumNetStat"
+        Style="{StaticResource WindowStyle}"
         mc:Ignorable="d"
-        Title="Opium Netstat - Network Monitor" Height="545.735" Width="879.976" Icon="../assets/if_JD-32_2625504.ico">
-    <Window.Resources>
-     
-    </Window.Resources>
+        Title="Opium Netstat - Network Monitor" Height="545.735" Width="900" Icon="/OpiumNetStat;component/assets/spaceinvaders_104010.ico">
+    <WindowChrome.WindowChrome>
+        <WindowChrome 
+            CaptionHeight="0"
+        ResizeBorderThickness="5" />
+    </WindowChrome.WindowChrome>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0" />
+            <RowDefinition Height="32" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Style="{StaticResource RowButton}" Width="100" Height="26">
-            <fa:FontAwesome Icon="ToggleOff"/>
-        </Button>
+        <Grid x:Name="window_header_grid" Grid.Row="0" MouseEnter="window_header_grid_MouseEnter" MouseLeave="window_header_grid_MouseLeave" MouseDown="window_header_grid_MouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+            <Border x:Name="window_icon_panel" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <fa:ImageAwesome Icon="SpaceShuttle"  Width="20" Foreground="WhiteSmoke" Margin="8,8,4,4" />
+            </Border>
+            <TextBlock Grid.Column="1" x:Name="txt_window_title" VerticalAlignment="Center" Margin="5,0,0,0" Text="OpiumNetStat - Privacy Network Monitor"  />
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+
+                <fa:ImageAwesome x:Name="WindowCloseIcon" Icon="WindowClose" MouseEnter="WindowCloseIcon_MouseEnter" MouseLeave="WindowCloseIcon_MouseLeave"
+                                     VerticalAlignment="Top" HorizontalAlignment="Right" 
+                                     Foreground="{StaticResource LightControlBG}" 
+                                     Margin="4,2,6,4"  
+                                     Width="20"
+                                     MouseDown="WindowCloseIcon_MouseDown" />
+
+            </StackPanel>
+        </Grid>
+      
         <ContentControl Grid.Row="1" prism:RegionManager.RegionName="ContentRegion" />
         
     </Grid>

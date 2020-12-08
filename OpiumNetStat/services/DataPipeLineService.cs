@@ -99,24 +99,29 @@ namespace OpiumNetStat.services
             {
                 foreach (var ip in portlist.Where(x=>!x.remote_ip.Equals("127.0.0.1")))
                 {
-                    var record = netStatList.Where(x => x.RemoteIP.Equals(ip.remote_ip.Trim())).FirstOrDefault();
-
-                    if (record is null)
+                    if(!ip.remote_ip.StartsWith("192.") || !ip.remote_ip.StartsWith("10."))
                     {
-                        record = await ips.GetIPInfo(ip);
+                        var record = netStatList.Where(x => x.RemoteIP.Equals(ip.remote_ip.Trim())).FirstOrDefault();
 
-                        if(record !=null)
+                        if (record is null)
                         {
-                            record.LastSeen = DateTime.Now;
-                            geoList.Add(record);
-                            netStatList.Add(record);
+                            record = await ips.GetIPInfo(ip);
+
+                            if (record != null)
+                            {
+                                record.LastSeen = DateTime.Now;
+                                geoList.Add(record);
+                                netStatList.Add(record);
+                            }
+
                         }
-                        
-                    }else
-                    {
-                        record.ConnectionStatus = ip.status;
-                        record.LastSeen = DateTime.Now;
+                        else
+                        {
+                            record.ConnectionStatus = ip.status;
+                            record.LastSeen = DateTime.Now;
+                        }
                     }
+                    
                 }
 
                 return geoList;
