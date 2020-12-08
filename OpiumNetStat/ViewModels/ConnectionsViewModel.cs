@@ -4,6 +4,7 @@ using OpiumNetStat.model;
 using OpiumNetStat.services;
 using Prism.Events;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -13,6 +14,7 @@ namespace OpiumNetStat.ViewModels
     {
         IEventAggregator _ea;
         IConnectionsService _cs;
+        IDataPipeLineService _dps;
 
         private ObservableCollection<NetStatResult> netStat;
         public ObservableCollection<NetStatResult> NetStat
@@ -23,39 +25,77 @@ namespace OpiumNetStat.ViewModels
         }
 
 
-        public ConnectionsViewModel(IEventAggregator ea, IConnectionsService cs)
+        public ConnectionsViewModel(IEventAggregator ea, IConnectionsService cs, IDataPipeLineService dps)
         {
             _cs = cs;
             _ea = ea;
+            _dps = dps;
 
             NetStat = new ObservableCollection<NetStatResult>();
 
             _ea.GetEvent<ConnectionUpdateEvent>().Subscribe(UpdateConnections, ThreadOption.UIThread);
-           // _cs.Get24HourData();
+  
             _cs.StartWork();
           
         }
 
-     
-        private void UpdateConnections(NetStatResult result)
+       
+
+        private void UpdateConnections(List<NetStatResult> result)
         {
-            var tmpList = NetStat;
 
-                     
-            var record = tmpList.Where(x => x.RemoteIP.Equals(result.RemoteIP)).FirstOrDefault();
+            if (result is null) return;
 
-            if (record is null)
+           
+
+
+
+
+            foreach(var r in result)
             {
-                tmpList.Add(result);
+                var record = NetStat.Where(x => x.RemoteIP.Equals(r.RemoteIP)).FirstOrDefault();
 
-            }else
-            {
-                record = result;
+                if (record is null)
+                {
+                    NetStat.Add(r);
+
+                }
+                else
+                {
+                    if (record.ConnectionStatus != r.ConnectionStatus)
+                    {
+                        record.ConnectionStatus = r.ConnectionStatus;
+                    }
+
+                    if (record.LastSeen != r.LastSeen)
+                    {
+                        record.LastSeen = r.LastSeen;
+                    }
+
+                }
             }
 
-            var orderedList = tmpList.OrderByDescending(x => x.LastSeen).ToList();
-            NetStat.Clear();
-            NetStat = new ObservableCollection<NetStatResult>(orderedList);  
+            foreach (var net in NetStat)
+            {
+                var existing = result.Where(x => x.RemoteIP.Equals(net.RemoteIP)).FirstOrDefault();
+
+                if (existing is null)
+                {
+                    net.ConnectionStatus = "Closed";
+
+                }
+                else
+                {
+                    net.ConnectionStatus = existing.ConnectionStatus;
+                    net.LastSeen = existing.LastSeen;
+                }
+            }
+
+
+
+            //var orderedList = tmpList.OrderByDescending(x => x.LastSeen).ToList();
+            // NetStat.OrderByDescending(x => x.LastSeen).ToList();
+            // NetStat = new ObservableCollection<NetStatResult>(orderedList);  
         }
     }
 }

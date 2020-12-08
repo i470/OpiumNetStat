@@ -24,11 +24,11 @@ namespace OpiumNetStat.services
         {
 
             wtoken = new CancellationTokenSource();
-            task = (ActionBlock<DateTimeOffset>)CreateNeverEndingTask( now =>  DoWorkAsync(), wtoken.Token);
+            task = (ActionBlock<DateTimeOffset>)CreateNeverEndingTask( now =>  DoWork(), wtoken.Token);
             task.Post(DateTimeOffset.Now);
         }
 
-        private  void DoWorkAsync()
+        private  void DoWork()
         {
            var ports =  NetStatService.GetNetStatPorts();
 
@@ -63,7 +63,7 @@ namespace OpiumNetStat.services
             {
 
                 action(now);
-                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
                 block.Post(DateTimeOffset.Now);
             },
             new ExecutionDataflowBlockOptions

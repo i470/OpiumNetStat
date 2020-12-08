@@ -16,6 +16,8 @@ namespace OpiumNetStat.Model
         public string process_name { get; set; }
         public string protocol { get; set; }
         public string remote_ip { get; set; }
+        public string PID { get; internal set; }
+        public string status { get; internal set; }
     }
 
 

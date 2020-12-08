@@ -92,6 +92,19 @@ namespace OpiumNetStat.model
                 RaisePropertyChanged(() => Software);
             }
         }
+
+        private short pid;
+        public short PID
+        {
+            get => pid;
+            set
+            {
+                pid = value;
+                RaisePropertyChanged(() => PID);
+            }
+        }
+
+
         private string connectionStatus;
         public string ConnectionStatus
         {

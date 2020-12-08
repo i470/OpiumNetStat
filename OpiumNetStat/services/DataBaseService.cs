@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using OpiumNetStat.model;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,12 @@ namespace OpiumNetStat.services
 {
     public class DataBaseService : IDataBaseService
     {
+        IEventAggregator ea;
+
+        public DataBaseService(IEventAggregator _ea)
+        {
+            ea = _ea;
+        }
 
         public bool RemoteIpExists(string ip)
         {

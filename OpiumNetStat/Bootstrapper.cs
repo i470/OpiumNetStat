@@ -4,6 +4,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Unity;
 using System.Windows;
+using Unity;
 
 namespace OpiumNetStat
 {
@@ -18,16 +19,18 @@ namespace OpiumNetStat
         {
             
             containerRegistry.RegisterSingleton<IConnectionsService, ConnectionsService>();
-            containerRegistry.Register<IIpInfoService, IpInfoService>();
+            containerRegistry.Register<IDataBaseService, DataBaseService>();
+            containerRegistry.RegisterSingleton<IDataPipeLineService, DataPipeLineService>();
+            containerRegistry.RegisterSingleton<IIpInfoService, IpInfoService>();
+
+            var dp = containerRegistry.GetContainer().Resolve<IDataPipeLineService>();
+          
         }
 
 
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
-
-            // generic type
-           // ViewModelLocationProvider.Register<MainWindow, MainViewModel>();
         }
     }
 }

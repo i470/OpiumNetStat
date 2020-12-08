@@ -1,19 +1,8 @@
-﻿using LiteDB;
-using Newtonsoft.Json;
-using OpiumNetStat.events;
-using OpiumNetStat.model;
-using OpiumNetStat.Model;
+﻿using OpiumNetStat.Model;
 using OpiumNetStat.services;
 using Prism.Events;
 using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Threading;
 using System.Windows.Input;
 
 namespace OpiumNetStat.ViewModels
@@ -30,8 +19,8 @@ namespace OpiumNetStat.ViewModels
     public class MainWindowViewModel : BindableBase
     {
 
-        IEventAggregator _ea;
-        IConnectionsService _cs;
+        IEventAggregator ea;
+        IConnectionsService cs;
 
       
 
@@ -64,9 +53,11 @@ namespace OpiumNetStat.ViewModels
 
 
 
-        public MainWindowViewModel(IEventAggregator ea, IConnectionsService cs)
+        public MainWindowViewModel(IEventAggregator _ea, IConnectionsService _cs)
         {
 
+            ea = _ea;
+            cs = _cs;
 
         }
 

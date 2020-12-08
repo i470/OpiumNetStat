@@ -63,11 +63,14 @@ namespace OpiumNetStat.services
                             var program = LookupProcess(Convert.ToInt16(pid));
 
                             var pinfo = new PortInfo();
+                            pinfo.PID = pid;
                             pinfo.name = program;
                             pinfo.port_number = port;
                             pinfo.remote_ip = remote;
                             pinfo.protocol = protocol;
                             pinfo.process_name = program;
+                            pinfo.status = status;
+
                             Ports.Add(pinfo);
 
                         }
