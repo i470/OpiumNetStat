@@ -6,7 +6,7 @@ Network Connections Monitor
 This is a extended netstat aka Connection Monitor with GUI interface
 
  
-![Opium NetStat](https://github.com/i470/OpiumNetStat/blob/master/wpf-opium-netstat-network-monitor-privacy-firewall.png "Privacy Connections Monitor and Firewall")
+![Opium NetStat](https://github.com/i470/OpiumNetStat/blob/master/wpf-opium-netstat-network-monitor-privacy-firewall-dark.png "Privacy Connections Monitor and Firewall")
 
 - [ ] add firewall control
 - [ ] add host resolve
