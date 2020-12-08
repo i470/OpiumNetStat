@@ -1,11 +1,15 @@
 # OpiumNetStat
-Network Connections Monitor
+Privacy Network Connections Monitor
 
-.NET 4.7 C# WPF Windows Desktop Client (Built with Visual Studio 17)
+.NET 4.7 C# WPF Windows Desktop Client (Built with Visual Studio 19)
 
 This is a extended netstat aka Connection Monitor with GUI interface
 
  
-![alt text](https://github.com/r0otChiXor/OpiumNetStat/blob/master/Opium%20NetStat/assets/active-connections-view.png "Active connections tab")
+![Opium NetStat](https://github.com/i470/OpiumNetStat/blob/master/wpf-opium-netstat-network-monitor-privacy-firewall-dark.png "Privacy Connections Monitor and Firewall")
 
-![alt text](https://github.com/r0otChiXor/OpiumNetStat/blob/master/Opium%20NetStat/assets/netstat-tab.png "NetStat tab")
+- [ ] add firewall control block on/off
+- [ ] add host resolve
+- [ ] add TrackerDB Check (source: https://github.com/duckduckgo/tracker-radar )
+- [ ] pimp UI
+- [ ] add reverse nmap port and vulnerability sacn 
