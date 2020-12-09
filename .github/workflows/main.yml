@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
          name: MSI Package
-         path: ${{ env.DESKTOP_APP_PACKAGE_PATH }}
+         path: ${{ env.DESKTOP_APP_PACKAGE_PATH }}\Opium.Installer.msi
        
       
             
