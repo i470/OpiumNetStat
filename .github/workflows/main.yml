@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
          name: MSI Package
-         path: ${{ env.INSTALLER_PATH }}\AppPackages
+         path: ${{ env.DESKTOP_APP_PACKAGE_PATH }}
        
       
             
