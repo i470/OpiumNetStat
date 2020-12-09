@@ -8,6 +8,7 @@ on:
       - master
 
 env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true 
   DESKTOP_APP_NAME: SimpleFrameworkApp.sln    
   DESKTOP_APP_PACKAGE_PATH: 'OpiumNetStat\Opium.Installer\bin\Releases'   
   INSTALLER_PATH: 'artifacts'  
