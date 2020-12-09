@@ -3,18 +3,21 @@ using OpiumNetStat.events;
 using OpiumNetStat.model;
 using OpiumNetStat.services;
 using Prism.Events;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OpiumNetStat.ViewModels
 {
-    public class ConnectionsViewModel:ViewModelBase
+    public class ConnectionsViewModel: BindableBase
     {
         IEventAggregator _ea;
         IConnectionsService _cs;
         IDataPipeLineService _dps;
+        
 
         private ObservableCollection<NetStatResult> netStat;
         public ObservableCollection<NetStatResult> NetStat
@@ -27,6 +30,8 @@ namespace OpiumNetStat.ViewModels
 
         public ConnectionsViewModel(IEventAggregator ea, IConnectionsService cs, IDataPipeLineService dps)
         {
+            isBusy = true;
+
             _cs = cs;
             _ea = ea;
             _dps = dps;
@@ -34,22 +39,37 @@ namespace OpiumNetStat.ViewModels
             NetStat = new ObservableCollection<NetStatResult>();
 
             _ea.GetEvent<ConnectionUpdateEvent>().Subscribe(UpdateConnections, ThreadOption.UIThread);
-  
-            _cs.StartWork();
+
+            Task.Run(() =>
+            {
+                _cs.StartWork();
+
+            }).ConfigureAwait(false);
+
+                
           
         }
 
-       
+        private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                if (IsBusy!=value)
+                {
+                    SetProperty(ref isBusy, value);
+                    _ea.GetEvent<IsBusyEvent>().Publish(IsBusy);
+                }
+                    
+            }
+
+        }
 
         private void UpdateConnections(List<NetStatResult> result)
         {
 
             if (result is null) return;
-
-           
-
-
-
 
             foreach(var r in result)
             {
@@ -95,7 +115,11 @@ namespace OpiumNetStat.ViewModels
 
             //var orderedList = tmpList.OrderByDescending(x => x.LastSeen).ToList();
             // NetStat.OrderByDescending(x => x.LastSeen).ToList();
-            // NetStat = new ObservableCollection<NetStatResult>(orderedList);  
+            // NetStat = new ObservableCollection<NetStatResult>(orderedList);
+            
+            IsBusy = false;
+          
+          
         }
     }
 }

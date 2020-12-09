@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using HBD.Framework.Collections;
+
 using OpiumNetStat.model;
 using OpiumNetStat.utils;
 
@@ -21,7 +21,7 @@ namespace OpiumNetStat.ViewModels
 
         public TcpGlobalParametersViewModel()
         {
-            TcpGlobalParameters=new ChangingObservableCollection<ProcessInformation.TcpGlobalParameter>();
+            TcpGlobalParameters=new ObservableCollection<ProcessInformation.TcpGlobalParameter>();
             TcpGlobalParameters = ProcessInformation.GeTcpGlobalParameters();
         }
     }

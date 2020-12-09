@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpiumNetStat", "OpiumNetStat\OpiumNetStat.csproj", "{FD490215-CC7D-477E-8E8D-140F930C52BE}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "OpiumNetStat.Installer", "OpiumNetStat.Installer\OpiumNetStat.Installer.wixproj", "{6F5A1270-401D-445B-8762-EB483DB482AF}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Opium.Installer", "Opium.Installer\Opium.Installer.wixproj", "{8837C2D2-96BF-461B-A327-34F9F84A7378}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{20A38B7B-1F94-45E9-A272-D05DDA1EA2CF}"
+	ProjectSection(SolutionItems) = preProject
+		make_installer.bat = make_installer.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +34,14 @@ Global
 		{FD490215-CC7D-477E-8E8D-140F930C52BE}.Release|x64.Build.0 = Release|x64
 		{FD490215-CC7D-477E-8E8D-140F930C52BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{FD490215-CC7D-477E-8E8D-140F930C52BE}.Release|x86.Build.0 = Release|Any CPU
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Debug|x64.ActiveCfg = Debug|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Debug|x86.ActiveCfg = Debug|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Debug|x86.Build.0 = Debug|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Release|Any CPU.ActiveCfg = Release|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Release|x64.ActiveCfg = Release|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Release|x86.ActiveCfg = Release|x86
-		{6F5A1270-401D-445B-8762-EB483DB482AF}.Release|x86.Build.0 = Release|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Debug|x64.ActiveCfg = Debug|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Debug|x86.ActiveCfg = Debug|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Debug|x86.Build.0 = Debug|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Release|Any CPU.ActiveCfg = Release|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Release|x64.ActiveCfg = Release|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Release|x86.ActiveCfg = Release|x86
+		{8837C2D2-96BF-461B-A327-34F9F84A7378}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

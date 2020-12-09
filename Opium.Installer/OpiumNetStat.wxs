@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?define ProductVersion = "0.0.0.3"?>
+<?define PrevProductVersion = "0.0.0.2"?>
+<?define ExeSourceFile = "Opium.Installer.msi"?>
+<?define ProductCode = "54A60290-9AB3-4DFA-805B-B69C0F635738"?>
+<?define ProductUpgradeCode = "1abf33a3-1c63-4849-a192-6c83200c6d22"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<?define OpiumNetStat_TargetDir=$(var.OpiumNetStat.TargetDir)?>
+	<Product Id="*" UpgradeCode="$(var.ProductUpgradeCode)" 
+	Name="OpiumNetStat $(var.ProductVersion) - Privacy Network Monitor" 
+	Language="1033" Version="$(var.ProductVersion)" Manufacturer="Inga Bemman">
+		
+
+		<Package Id="*" 
+		Description="OpiumNetStat$(var.ProductVersion)" InstallerVersion="200" InstallScope="perMachine" Compressed="yes" />
+
+		<Icon Id="Icon.ico" SourceFile="$(var.ProjectDir)Icon.ico" />
+		<Property Id="ARPPRODUCTICON" Value="Icon.ico" />
+		
+		<WixVariable Id="WixUIBannerBmp" Value="Images\installer_top-banner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="Images\installer_background.bmp" />
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\license.rtf" />
+
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+		<UIRef Id="WixUI_InstallDir" />
+
+		<UI>
+			
+			<Publish 
+			Dialog="ExitDialog" 
+			Control="Finish" 
+			Event="DoAction" 
+			Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+		</UI>
+
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value=" Launch OpiumNetStat after install"   />
+		<Property Id="WixShellExecTarget" Value="[#OpiumNetStat.exe]" />
+		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+
+		<MediaTemplate EmbedCab="yes" />
+
+		<MajorUpgrade AllowDowngrades="no" 
+		AllowSameVersionUpgrades="no" 
+		Disallow="no" 
+		IgnoreRemoveFailure="no" MigrateFeatures="yes" Schedule="afterInstallInitialize" 
+		DowngradeErrorMessage="A later version of [ProductName] is already installed" />
+
+		<Feature Id="ProductFeature" Title="OpiumNetStat" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentRef Id="ApplicationShortcut" />
+			<ComponentRef Id="ApplicationShortcutDesktop" />
+		</Feature>
+
+		
+		
+	</Product>
+	
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="OpiumNetStat">
+					<Directory Id="Files" Name="Files" />
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="ApplicationProgramsFolder" Name="OpiumNetStat" />
+			</Directory>
+			<Directory Id="DesktopFolder" Name="Desktop" />
+		</Directory>
+	</Fragment>
+	
+	<Fragment>
+		<DirectoryRef Id="ApplicationProgramsFolder">
+			<Component Id="ApplicationShortcut" Guid="9bd13330-6540-406f-a3a8-d7f7c69ae7f9">
+				<Shortcut Id="ApplicationStartMenuShortcut" Name="OpiumNetStat" Description="OpiumNetStat" Target="[INSTALLFOLDER]OpiumNetStat.exe" WorkingDirectory="INSTALLFOLDER" />
+				<RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
+				<RegistryValue Root="HKCU" Key="Software\OpiumNetStat" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+		
+		<DirectoryRef Id="DesktopFolder">
+			<Component Id="ApplicationShortcutDesktop" Guid="cde1e030-eb64-49a5-b7b8-400b379c2d1a">
+				<Shortcut Id="ApplicationDesktopShortcut" Name="OpiumNetStat" Description="OpiumNetStat" Target="[INSTALLFOLDER]OpiumNetStat.exe" WorkingDirectory="INSTALLFOLDER" />
+				<RemoveFolder Id="RemoveDesktopFolder" Directory="DesktopFolder" On="uninstall" />
+				<RegistryValue Root="HKCU" Key="Software\OpiumNetStat" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+	
+	<Fragment>
+	  <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+	    <Component Id="OpiumNetStat.exe" Guid="d0d214e7-c4d1-42f4-9dff-b76a191565b6">
+	      <File Id="OpiumNetStat.exe" Name="OpiumNetStat.exe" Source="$(var.OpiumNetStat_TargetDir)OpiumNetStat.exe" />
+	    </Component>
+	    <Component Id="OpiumNetStat.exe.config" Guid="4c2550e1-799e-485d-a236-c8ef830461f2">
+	      <File Id="OpiumNetStat.exe.config" Name="OpiumNetStat.exe.config" Source="$(var.OpiumNetStat_TargetDir)OpiumNetStat.exe.config" />
+	    </Component>
+	    <Component Id="Prism.Unity.Wpf.dll" Guid="5507263d-16b7-46cb-ba76-52a815aed757">
+	      <File Id="Prism.Unity.Wpf.dll" Name="Prism.Unity.Wpf.dll" Source="$(var.OpiumNetStat_TargetDir)Prism.Unity.Wpf.dll" />
+	    </Component>
+	    <Component Id="Prism.Wpf.dll" Guid="4f656edd-5568-49c8-8f5b-3ae086b2f1ae">
+	      <File Id="Prism.Wpf.dll" Name="Prism.Wpf.dll" Source="$(var.OpiumNetStat_TargetDir)Prism.Wpf.dll" />
+	    </Component>
+	    <Component Id="FontAwesome.WPF.dll" Guid="e5128bcb-6477-49c4-833f-a508706cf772">
+	      <File Id="FontAwesome.WPF.dll" Name="FontAwesome.WPF.dll" Source="$(var.OpiumNetStat_TargetDir)FontAwesome.WPF.dll" />
+	    </Component>
+	    <Component Id="Prism.dll" Guid="8d01fc22-c03d-4954-8bc8-f80e1bf607ce">
+	      <File Id="Prism.dll" Name="Prism.dll" Source="$(var.OpiumNetStat_TargetDir)Prism.dll" />
+	    </Component>
+	    <Component Id="Microsoft.Diagnostics.Tracing.TraceEvent.dll" Guid="f53a2db9-c8df-4a28-beeb-53c424e2e55c">
+	      <File Id="Microsoft.Diagnostics.Tracing.TraceEvent.dll" Name="Microsoft.Diagnostics.Tracing.TraceEvent.dll" Source="$(var.OpiumNetStat_TargetDir)Microsoft.Diagnostics.Tracing.TraceEvent.dll" />
+	    </Component>
+	    <Component Id="System.Threading.Tasks.Dataflow.dll" Guid="94e5ff7c-756c-473c-8038-f78305d2196f">
+	      <File Id="System.Threading.Tasks.Dataflow.dll" Name="System.Threading.Tasks.Dataflow.dll" Source="$(var.OpiumNetStat_TargetDir)System.Threading.Tasks.Dataflow.dll" />
+	    </Component>
+	    <Component Id="LiteDB.dll" Guid="e5463c8b-0f48-436f-8e12-adee92dd6eb2">
+	      <File Id="LiteDB.dll" Name="LiteDB.dll" Source="$(var.OpiumNetStat_TargetDir)LiteDB.dll" />
+	    </Component>
+	    <Component Id="Unity.Abstractions.dll" Guid="482c1ede-5ee4-422e-8cdc-114f77e526a8">
+	      <File Id="Unity.Abstractions.dll" Name="Unity.Abstractions.dll" Source="$(var.OpiumNetStat_TargetDir)Unity.Abstractions.dll" />
+	    </Component>
+	    <Component Id="Newtonsoft.Json.dll" Guid="9c76c4c5-d28a-4d3e-8071-c15d31e51bf4">
+	      <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.OpiumNetStat_TargetDir)Newtonsoft.Json.dll" />
+	    </Component>
+	    <Component Id="Unity.Container.dll" Guid="e968a235-b5e2-4c5c-a290-8c26d7e4385f">
+	      <File Id="Unity.Container.dll" Name="Unity.Container.dll" Source="$(var.OpiumNetStat_TargetDir)Unity.Container.dll" />
+	    </Component>
+	    <Component Id="System.Runtime.CompilerServices.Unsafe.dll" Guid="df05bc6d-a95c-488b-86f8-0e8fde5fdafe">
+	      <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.OpiumNetStat_TargetDir)System.Runtime.CompilerServices.Unsafe.dll" />
+	    </Component>
+	    <Component Id="Microsoft.Xaml.Behaviors.dll" Guid="1db9e74e-f4c8-4104-b274-eddec9cf4296">
+	      <File Id="Microsoft.Xaml.Behaviors.dll" Name="Microsoft.Xaml.Behaviors.dll" Source="$(var.OpiumNetStat_TargetDir)Microsoft.Xaml.Behaviors.dll" />
+	    </Component>
+	    <Component Id="Microsoft.Diagnostics.FastSerialization.dll" Guid="8419e577-81af-4a71-85a9-7914eeeb423a">
+	      <File Id="Microsoft.Diagnostics.FastSerialization.dll" Name="Microsoft.Diagnostics.FastSerialization.dll" Source="$(var.OpiumNetStat_TargetDir)Microsoft.Diagnostics.FastSerialization.dll" />
+	    </Component>
+	    <Component Id="OSExtensions.dll" Guid="c44ef6d6-744f-48bc-a754-f96924c85887">
+	      <File Id="OSExtensions.dll" Name="OSExtensions.dll" Source="$(var.OpiumNetStat_TargetDir)OSExtensions.dll" />
+	    </Component>
+	    <Component Id="TraceReloggerLib.dll" Guid="ccee99de-b565-4c34-87c7-92535e7e74a5">
+	      <File Id="TraceReloggerLib.dll" Name="TraceReloggerLib.dll" Source="$(var.OpiumNetStat_TargetDir)TraceReloggerLib.dll" />
+	    </Component>
+	    <Component Id="System.Threading.Tasks.Extensions.dll" Guid="b31131d0-6ef4-4aec-a481-272edf6d6cdb">
+	      <File Id="System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" Source="$(var.OpiumNetStat_TargetDir)System.Threading.Tasks.Extensions.dll" />
+	    </Component>
+	  </ComponentGroup>
+	</Fragment>
+</Wix>

@@ -39,7 +39,7 @@
                 <Setter.Value>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Foreground" Value="#FF0F0F0F"/>
-                         <Setter Property="Padding" Value="2" />
+                        <Setter Property="Padding" Value="2" />
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="BorderBrush" Value="Transparent" />
@@ -62,76 +62,83 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Storyboard x:Key="OnLoaded1"/>
 
     </UserControl.Resources>
-    <Grid>
+    <UserControl.Triggers>
       
-        <Grid>
-            <ScrollViewer Margin="20">
-                <ItemsControl ItemsSource="{Binding NetStat}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border>
-                                <StackPanel Orientation="Horizontal" >
-                                    <TextBlock Text="{Binding LastSeen, StringFormat=t}" Margin="0,0,5,0"  FontSize="11"/>
-                                    <fa:FontAwesome Icon="Laptop" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding Software}" Width="180"  FontSize="11"/>
-                                    <TextBlock Text=" : " FontSize="11" />
-                                    <TextBlock Text="{Binding PortNumber}" Width="40"  FontSize="11"/>
-                                    <TextBlock Text="{Binding CountryCode}"  Margin="0,0,15,0"  FontSize="11"/>
-                                    <TextBlock Text="{Binding RemoteIP}" Width="120"  FontSize="11"/>
-                                     <TextBlock Text="{Binding Org}" Width="250" FontSize="11"/>
-                                    
-                                    <TextBlock Text="{Binding ConnectionStatus}" FontSize="11" Width="80" />
-                                    
-                                        <fa:FontAwesome Icon="ToggleOn" Margin="15,0,5,0"/>
-                          
-                                 
-                                    <Border >
-                                        <fa:FontAwesome Icon="Bug" Width="32" Height="32" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            </ScrollViewer>
-            
-            <!--<DataGrid ItemsSource="{Binding NetStat}" IsReadOnly="True" AutoGenerateColumns="false" CanUserResizeRows="False" CanUserReorderColumns="False" GridLinesVisibility="None" SelectionUnit="Cell" >
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="App" Header="App" Binding="{Binding Software}"/>
-                     <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
-                    <DataGridTextColumn x:Name="Host" Header="Host"  Binding="{Binding Host}"/>
-                    <DataGridTextColumn x:Name="Org" Header="Org" Binding="{Binding Org}"/>
-                    <DataGridTextColumn x:Name="Country" Header="Origin" Binding="{Binding CountryCode}"/>
-                    <DataGridTextColumn x:Name="Port_Number" Header="PortInfo # " Binding="{Binding PortNumber}"/>
-                    --><!--<DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding PortNormalyUsedBy}"/>
-                    <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding PortOfficial}"/>--><!--
-                    <DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>
-                    <DataGridTextColumn x:Name="Actions" Header="LastSeen"  Binding="{Binding LastSeen, StringFormat=t}"/>
-                    <DataGridTemplateColumn x:Name="Firewall" Header="Block on a Firewall">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Border>
-                                    <Button Style="{StaticResource RowButton}" >
-                                        <fa:FontAwesome Icon="ToggleOn"/>
-                                    </Button>
+    </UserControl.Triggers>
 
-                                </Border>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn x:Name="IsTracker" Header="Tracker">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
+
+
+    <Grid x:Name="grid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="BusyState" GeneratedDuration="1:1:1" To="RegularState">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuarticEase EasingMode="EaseIn"/>
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="RegularState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="scrollViewer">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="border">
+                            <DiscreteObjectKeyFrame KeyTime="3" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="BusyState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="border">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="scrollViewer">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+     
+        <ScrollViewer x:Name="scrollViewer" Margin="20">
+            <ItemsControl ItemsSource="{Binding NetStat}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{Binding LastSeen, StringFormat=t}" Margin="0,0,5,0"  FontSize="11"/>
+                                <fa:FontAwesome Icon="Laptop" Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding Software}" Width="180"  FontSize="11"/>
+                                <TextBlock Text=" : " FontSize="11" />
+                                <TextBlock Text="{Binding PortNumber}" Width="40"  FontSize="11"/>
+                                <TextBlock Text="{Binding CountryCode}"  Margin="0,0,15,0"  FontSize="11"/>
+                                <TextBlock Text="{Binding RemoteIP}" Width="120"  FontSize="11"/>
+                                <TextBlock Text="{Binding Org}" Width="250" FontSize="11"/>
+
+                                <TextBlock Text="{Binding ConnectionStatus}" FontSize="11" Width="80" />
+
+                                <fa:FontAwesome Icon="ToggleOn" Margin="15,0,5,0"/>
+
+
                                 <Border >
                                     <fa:FontAwesome Icon="Bug" Width="32" Height="32" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>-->
-        </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Border Background="#CC2B2B2B" x:Name="border" Visibility="Collapsed">
+            <TextBlock Text="LOADING..." Foreground="#66FFFFFF" HorizontalAlignment="Center" Opacity="0.6" VerticalAlignment="Center" FontSize="100" Margin="-20" >
+                <TextBlock.Effect>
+                    <DropShadowEffect/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </Border>
     </Grid>
 </UserControl>
