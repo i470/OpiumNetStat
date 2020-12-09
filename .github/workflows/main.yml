@@ -38,6 +38,12 @@ jobs:
       
       - name: Build
         run: msbuild ${{ env.DESKTOP_APP_NAME }} /p:Configuration=Release /p:Platform="x86"
+    
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: MSI Package
+         path: ${{ env.INSTALLER_PATH }}\AppPackages
        
       
             
