@@ -24,9 +24,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Create ArtifactsFolder
-        run: rmdir "artifacts\" /s /q
-        
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.0.1
         with:
@@ -42,7 +39,7 @@ jobs:
         run: msbuild ${{ env.DESKTOP_APP_NAME }} /p:Configuration=Release /p:Platform="x86"
        
       - name: get build output and copy out to root 
-        run: CALL xcopy "Opium.Installer\bin\Release\*.msi" "artifacts\" /s /e /Y
+        run:  xcopy "Opium.Installer\bin\Release\*.msi" "artifacts\" /s /e /Y
         
       - name: Publish artifacts
         uses: actions/upload-artifact@v1.0.0
