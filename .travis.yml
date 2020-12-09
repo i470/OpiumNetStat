@@ -1,0 +1,9 @@
+language: csharp
+solution: OpiumNetStat.sln
+
+install:
+  - nuget restore OpiumNetStat.sln
+
+script:
+  - xbuild OpiumNetStat.sln
+  
