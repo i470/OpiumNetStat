@@ -2,7 +2,7 @@
 Privacy Network Connections Monitor
 
 .NET 4.7 C# WPF Windows Desktop Client (Built with Visual Studio 19)
-or run **make_installer.cmd** this will create installer in **"artifacts"** folder.
+or run **make_installer.cmd** this will create **Opium.Installer.msi** installer in **"artifacts"** folder.
 
 This is a extended netstat aka Connection Monitor with GUI interface
 
