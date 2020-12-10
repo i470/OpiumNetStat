@@ -25,17 +25,21 @@ namespace OpiumNetStat.services
                     ps.FileName = "netstat.exe";
                     ps.UseShellExecute = false;
                     ps.WindowStyle = ProcessWindowStyle.Hidden;
+                 
                     ps.RedirectStandardInput = true;
                     ps.RedirectStandardOutput = true;
                     ps.RedirectStandardError = true;
 
                     p.StartInfo = ps;
+                    p.StartInfo.CreateNoWindow = true;
                     p.Start();
+               
 
                     StreamReader stdOutput = p.StandardOutput;
-                    StreamReader stdError = p.StandardError;
 
-                    string content = stdOutput.ReadToEnd() + stdError.ReadToEnd();
+
+                    string content = stdOutput.ReadToEnd();
+
                     string exitStatus = p.ExitCode.ToString();
 
                     if (exitStatus != "0")
@@ -79,7 +83,7 @@ namespace OpiumNetStat.services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
             }
 
 

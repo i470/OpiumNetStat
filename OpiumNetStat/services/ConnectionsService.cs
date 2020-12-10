@@ -28,7 +28,7 @@ namespace OpiumNetStat.services
             task.Post(DateTimeOffset.Now);
         }
 
-        private  void DoWork()
+        public void DoWork()
         {
            var ports =  NetStatService.GetNetStatPorts();
 

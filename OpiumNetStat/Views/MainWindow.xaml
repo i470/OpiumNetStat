@@ -6,6 +6,7 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         prism:ViewModelLocator.AutoWireViewModel="True"
+        ShowActivated="False"
         xmlns:local="clr-namespace:OpiumNetStat"
         Style="{StaticResource WindowStyle}"
         mc:Ignorable="d"

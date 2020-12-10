@@ -108,24 +108,58 @@
             <ItemsControl ItemsSource="{Binding NetStat}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border>
-                            <StackPanel Orientation="Horizontal" >
-                                <TextBlock Text="{Binding LastSeen, StringFormat=t}" Margin="0,0,5,0"  FontSize="11"/>
-                                <fa:FontAwesome Icon="Laptop" Margin="0,0,5,0"/>
-                                <TextBlock Text="{Binding Software}" Width="180"  FontSize="11"/>
-                                <TextBlock Text=" : " FontSize="11" />
-                                <TextBlock Text="{Binding PortNumber}" Width="40"  FontSize="11"/>
-                                <TextBlock Text="{Binding CountryCode}"  Margin="0,0,15,0"  FontSize="11"/>
-                                <TextBlock Text="{Binding RemoteIP}" Width="120"  FontSize="11"/>
-                                <TextBlock Text="{Binding Org}" Width="250" FontSize="11"/>
+                      
+                        <Border x:Name="itemBorder" Padding="2">
+                            <Border.Style>
+                                <Style>
+                                    <Setter Property="Border.Background" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="Border.IsMouseOver" Value="True">
+                                            <Setter Property="Border.Background" Value="{StaticResource LightControlBG}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                                
+                                <TextBlock Text="{Binding LastSeen, StringFormat=t}" Margin="5,0,5,0"  FontSize="11"  VerticalAlignment="Center" />
+                                <fa:FontAwesome Icon="Laptop" Margin="0,0,5,0"  VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Software}" Width="180"  FontSize="11"  VerticalAlignment="Center" />
+                                <TextBlock Text=" : " FontSize="11"  VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding PortNumber}" Width="40"  FontSize="11"  VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding CountryCode}"  Margin="0,0,15,0" Width="20" FontSize="11"  VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding RemoteIP}" Width="120"  FontSize="11"  VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Org}" Width="250" FontSize="11"  VerticalAlignment="Center"  />
 
-                                <TextBlock Text="{Binding ConnectionStatus}" FontSize="11" Width="80" />
+                                <TextBlock Text="{Binding ConnectionStatus}" FontSize="11" Width="80"  VerticalAlignment="Center" />
 
-                                <fa:FontAwesome Icon="ToggleOn" Margin="15,0,5,0"/>
+                                <fa:FontAwesome Icon="ToggleOn" Margin="15,0,5,0"  VerticalAlignment="Center" />
 
 
-                                <Border >
-                                    <fa:FontAwesome Icon="Bug" Width="32" Height="32" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Border  VerticalAlignment="Center" Padding="3">
+                                    <fa:FontAwesome Icon="Bug" 
+                                                    Foreground="Red" 
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" />
+                                </Border>
+                                <Border Padding="3">
+
+                                    <fa:FontAwesome Icon="Copy" 
+                                                    Foreground="LightGray" 
+                                                   
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" >
+                                        <fa:FontAwesome.Style>
+                                            <Style>
+                                                <Setter Property="fa:FontAwesome.Foreground" Value="{StaticResource LightControlBG}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="fa:FontAwesome.IsMouseOver" Value="True">
+                                                        <Setter Property="fa:FontAwesome.Foreground" Value="Red" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </fa:FontAwesome.Style>
+                                    </fa:FontAwesome>
                                 </Border>
                             </StackPanel>
                         </Border>

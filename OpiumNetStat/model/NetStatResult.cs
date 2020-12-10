@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
 namespace OpiumNetStat.model
 {
-    public class NetStatResult : BaseNotify
+    public class NetStatResult : BaseNotify, IEquatable<NetStatResult>, IComparable<NetStatResult>
     {
         public NetStatResult()
         {
@@ -125,8 +126,76 @@ namespace OpiumNetStat.model
         public string Org { get; set; }
         public string Host { get; set; }
         public DateTime LastSeen { get; set; }
-        
 
+
+
+        public override int GetHashCode()
+        {
+            return RemoteIP.GetHashCode() ^ LastSeen.GetHashCode() ^ ConnectionStatus.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as NetStatResult);
+        }
+
+
+        public bool Equals(NetStatResult other)
+        {
+            if (ReferenceEquals(other, null))
+                return false;
+
+            var equal = this.RemoteIP == other.RemoteIP
+                && this.connectionStatus == other.connectionStatus
+                && this.LastSeen == other.LastSeen
+                && this.PID == other.PID
+                && this.CountryCode == other.CountryCode;
+
+            return equal;
+
+        }
+
+        // Result:
+        //  < 0 : this instance older than other
+        //  = 0 : this instance equivalent to other
+        //  > 0 : this instance newer than other
+        //  -2 if not comparable
+
+        public int CompareTo(NetStatResult other)
+        {
+            if (ReferenceEquals(other, null))
+                return 1;
+
+            if (this.Equals(other))
+                return 0;
+
+           
+            var isOlder = this.LastSeen > other.LastSeen;
+            var hasNewState = this.ConnectionStatus != other.ConnectionStatus;
+              
+            if((this.RemoteIP == other.RemoteIP) && isOlder && !hasNewState)
+            {
+                return -1;
+            }
+
+            return -2;
+        }
+
+     
+    }
+
+
+    public class NetStatResultComparer: IEqualityComparer<NetStatResult>
+    {
+        public bool Equals(NetStatResult x, NetStatResult y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(NetStatResult net)
+        {
+            return net.GetHashCode();
+        }
     }
 }
 

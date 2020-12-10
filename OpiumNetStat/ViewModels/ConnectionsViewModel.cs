@@ -8,7 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using OpiumNetStat.utils;
+using System.Windows;
+using NetFwTypeLib;
 
 namespace OpiumNetStat.ViewModels
 {
@@ -40,14 +44,16 @@ namespace OpiumNetStat.ViewModels
 
             _ea.GetEvent<ConnectionUpdateEvent>().Subscribe(UpdateConnections, ThreadOption.UIThread);
 
-            Task.Run(() =>
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+            Task task = PeriodicTaskFactory.Start(() =>
             {
-                _cs.StartWork();
+                _cs.DoWork();
 
-            }).ConfigureAwait(false);
+            }, intervalInMilliseconds: 5000, synchronous: true, cancelToken: cancellationTokenSource.Token);
 
-                
-          
+           
+
         }
 
         private bool isBusy;
@@ -66,60 +72,36 @@ namespace OpiumNetStat.ViewModels
 
         }
 
+
+        private void BlockIP(string ip)
+        {
+            INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+            firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
+            firewallRule.Description = "Your rule description";
+            firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN; // inbound
+            firewallRule.Enabled = true;
+            firewallRule.InterfaceTypes = "All";
+            firewallRule.RemoteAddresses = "1.2.3.0/24"; // add more blocks comma separated
+            firewallRule.Name = "You rule name";
+            firewallPolicy.Rules.Add(firewallRule);
+        }
+
         private void UpdateConnections(List<NetStatResult> result)
         {
-
             if (result is null) return;
+            if (result.Count == 0) return;
 
-            foreach(var r in result)
-            {
-                var record = NetStat.Where(x => x.RemoteIP.Equals(r.RemoteIP)).FirstOrDefault();
+            var hashset = new HashSet<NetStatResult>(NetStat.ToList(),new NetStatResultComparer());
+            hashset.SymmetricExceptWith(result);
+            var merged = hashset.OrderByDescending(x => x.LastSeen).ToList();
 
-                if (record is null)
-                {
-                    NetStat.Add(r);
+            NetStat.Clear();
+            NetStat.AddRange(merged);
 
-                }
-                else
-                {
-                    if (record.ConnectionStatus != r.ConnectionStatus)
-                    {
-                        record.ConnectionStatus = r.ConnectionStatus;
-                    }
 
-                    if (record.LastSeen != r.LastSeen)
-                    {
-                        record.LastSeen = r.LastSeen;
-                    }
+            if (isBusy)
+                IsBusy = false;
 
-                }
-            }
-
-            foreach (var net in NetStat)
-            {
-                var existing = result.Where(x => x.RemoteIP.Equals(net.RemoteIP)).FirstOrDefault();
-
-                if (existing is null)
-                {
-                   // net.ConnectionStatus = "Closed";
-
-                }
-                else
-                {
-                    net.ConnectionStatus = existing.ConnectionStatus;
-                    net.LastSeen = existing.LastSeen;
-                }
-            }
-
-            NetStat = new ObservableCollection<NetStatResult>(NetStat.OrderByDescending(x => x.LastSeen).ToList());
-
-            //var orderedList = tmpList.OrderByDescending(x => x.LastSeen).ToList();
-            // NetStat.OrderByDescending(x => x.LastSeen).ToList();
-            // NetStat = new ObservableCollection<NetStatResult>(orderedList);
-            
-            IsBusy = false;
-          
-          
         }
     }
 }
