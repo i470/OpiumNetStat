@@ -83,7 +83,7 @@ namespace OpiumNetStat.ViewModels
             firewallRule.InterfaceTypes = "All";
             firewallRule.RemoteAddresses = "1.2.3.0/24"; // add more blocks comma separated
             firewallRule.Name = "You rule name";
-            firewallPolicy.Rules.Add(firewallRule);
+           
         }
 
         private void UpdateConnections(List<NetStatResult> result)
