@@ -9,6 +9,7 @@
         public string City { get; set; }
         public string Org { get; set; }
         public string Ip { get; set; }
+        public string Isp { get; set; }
     }
 
    

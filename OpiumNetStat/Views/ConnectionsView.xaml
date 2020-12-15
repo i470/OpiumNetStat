@@ -53,17 +53,17 @@
         </VisualStateManager.VisualStateGroups>
 
 
-        <DataGrid ItemsSource="{Binding NetStat}" AutoGenerateColumns="false" IsReadOnly="True" SelectionMode="Single" FontSize="12" >
+        <DataGrid ItemsSource="{Binding NetStat}" AutoGenerateColumns="false" IsReadOnly="True" SelectionMode="Single" FontSize="12" SelectedItem="{Binding SelectedNetStat}" >
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="_Copy" Icon="{materialDesign:PackIcon Kind=ContentCopy}" Command="Copy" />
+                    <MenuItem Header="_Copy" Icon="{materialDesign:PackIcon Kind=ContentCopy}" Command="Copy"  />
                     <MenuItem Header="Block IP" Icon="{materialDesign:PackIcon Kind=Biohazard}" />
                     <MenuItem Header="Scan IP" Icon="{materialDesign:PackIcon Kind=Scanner}" />
                     <MenuItem Header="Kill App" Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Actions" Header="LastSeen"  Binding="{Binding LastSeen, StringFormat=t}"/>
+                <DataGridTextColumn x:Name="Actions" Header=""  Binding="{Binding LastSeen, StringFormat=t}"/>
                 <DataGridTemplateColumn Header="App">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -77,11 +77,23 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
-                <DataGridTextColumn x:Name="Host" Header="Host"  Binding="{Binding Host}"/>
+              
                 <DataGridTextColumn x:Name="Port_Number" Header="Port" Binding="{Binding PortNumber}"/>
-                <DataGridTextColumn x:Name="Org" Header="Org" Binding="{Binding Org}"/>
+                <DataGridTextColumn x:Name="Org" Header="IP Owner" Binding="{Binding Org}"/>
                 <DataGridTextColumn x:Name="Country" Header="Origin" Binding="{Binding CountryCode}"/>
-                <DataGridTextColumn x:Name="City" Header="City" Binding="{Binding City}"/>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding City}" Margin="0,0,1,0"/>
+                                <TextBlock Text=", " />
+                                <TextBlock Text="{Binding Region}" Margin="0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="Host" Header="Host"  Binding="{Binding Host}"/>
+                <!--<DataGridTextColumn x:Name="City" Header="City" Binding="{Binding City}"/>-->
                 <!--<DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding PortNormalyUsedBy}"/>
                     <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding PortOfficial}"/>-->
                 <!--<DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>-->

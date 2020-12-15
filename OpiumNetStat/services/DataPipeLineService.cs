@@ -49,6 +49,8 @@ namespace OpiumNetStat.services
                     if (ipInfo != null && string.IsNullOrEmpty(ipInfo.CountryCode))
                     {
                         er.CountryCode = ipInfo.CountryCode;
+                        er.City = ipInfo.City;
+                        er.Region = ipInfo.Region;
                     }
                     
                 }
@@ -67,8 +69,15 @@ namespace OpiumNetStat.services
                 if(ipInfo!=null)
                 {
                     var netstat = new NetStatResult(proc);
+                    netstat.City = ipInfo.City;
+                    netstat.Region = ipInfo.Region;
                     netstat.CountryCode = ipInfo.CountryCode;
                     netstat.Org = ipInfo.Org;
+                    if(string.IsNullOrEmpty(netstat.Org))
+                    {
+                        netstat.Org = ipInfo.Isp;
+                    }
+
                     netstat.Host = GetHostByAddress(proc.remote_ip);
                     netstat.Software = LookupProcess(proc.PID);
 
@@ -146,14 +155,16 @@ namespace OpiumNetStat.services
             try
             {
                 var host = Dns.GetHostEntry(ipAddress).HostName;
-                var uri = host.Split('.');
-                var l = uri.Length;
-                var domain = $"{uri[l-2]}.{uri[l - 1]}";
-                return domain;
+                //var uri = host.Split('.');
+                //var l = uri.Length;
+                //var domain = $"{uri[l-2]}.{uri[l - 1]}";
+                //return domain;
+
+                return host;
             }
             catch (Exception)
             {
-                return ipAddress;
+                return null;
             }
         }
 

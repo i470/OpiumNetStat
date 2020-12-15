@@ -31,6 +31,13 @@ namespace OpiumNetStat.ViewModels
             set { SetProperty(ref netStat, value); }
         }
 
+        private NetStatResult _selectedNetStat;
+        public  NetStatResult SelectedNetStat
+        {
+
+            get => _selectedNetStat;
+            set { SetProperty(ref _selectedNetStat, value); }
+        }
 
         public ConnectionsViewModel(IEventAggregator ea, IConnectionsService cs, IDataPipeLineService dps)
         {
