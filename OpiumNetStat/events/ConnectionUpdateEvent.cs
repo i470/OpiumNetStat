@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace OpiumNetStat.events
 {
-    public class ConnectionUpdateEvent: PubSubEvent<List<NetStatResult>>
+    public class ConnectionUpdateEvent: PubSubEvent<NetStatResult>
     {
     }
 }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using OpiumNetStat.Model;
+using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Windows.Media.Imaging;
 
 namespace OpiumNetStat.model
 {
@@ -17,6 +19,28 @@ namespace OpiumNetStat.model
             ConnectionStatus = tcp.State.ToString();
             PortNumber = (short)tcp.RemoteEndPoint.Port;
             LastSeen = DateTime.Now;
+        }
+
+        public NetStatResult(ProcessIPInfo proc)
+        {
+            Proc = proc;
+
+            RemoteIP = proc.remote_ip;
+            ConnectionStatus = proc.status;
+            PortNumber = proc.port_number;
+            LastSeen = DateTime.Now;
+            Software = proc.process_name;
+
+            if(proc.icon!=null)
+            {
+                Icon = proc.icon;
+                Icon.Freeze();
+
+            }else
+            {
+
+            }
+            
         }
 
         private string localIP;
@@ -41,6 +65,17 @@ namespace OpiumNetStat.model
             }
         }
 
+        private BitmapImage _icon;
+        public BitmapImage Icon
+        {
+            get => _icon;
+            set
+            {
+                _icon = value;
+                RaisePropertyChanged(() => Icon);
+            }
+        }
+
         private string origin;
         public string Origin
         {
@@ -52,8 +87,8 @@ namespace OpiumNetStat.model
             }
         }
 
-        private short portNumber;
-        public short PortNumber
+        private int portNumber;
+        public int PortNumber
         {
             get => portNumber;
             set
@@ -94,8 +129,8 @@ namespace OpiumNetStat.model
             }
         }
 
-        private short pid;
-        public short PID
+        private int pid;
+        public int PID
         {
             get => pid;
             set
@@ -126,8 +161,7 @@ namespace OpiumNetStat.model
         public string Org { get; set; }
         public string Host { get; set; }
         public DateTime LastSeen { get; set; }
-
-
+        public ProcessIPInfo Proc { get; }
 
         public override int GetHashCode()
         {

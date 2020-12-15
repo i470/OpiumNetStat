@@ -34,7 +34,7 @@ namespace OpiumNetStat.ViewModels
 
         public ConnectionsViewModel(IEventAggregator ea, IConnectionsService cs, IDataPipeLineService dps)
         {
-            isBusy = true;
+            isBusy = false;
 
             _cs = cs;
             _ea = ea;
@@ -46,14 +46,43 @@ namespace OpiumNetStat.ViewModels
 
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
+       
+
             Task task = PeriodicTaskFactory.Start(() =>
             {
                 _cs.DoWork();
 
-            }, intervalInMilliseconds: 5000, synchronous: true, cancelToken: cancellationTokenSource.Token);
+               
 
-           
+            }, intervalInMilliseconds: 10000, synchronous: true, cancelToken: cancellationTokenSource.Token);
 
+         
+
+        }
+
+        private void UpdateConnections(NetStatResult result)
+        {
+          
+
+            if (NetStat.Any(x=>x.RemoteIP.Equals(result.RemoteIP)))
+            {
+                var net = netStat.Where(x => x.RemoteIP.Equals(result.RemoteIP)).FirstOrDefault();
+                var index = netStat.IndexOf(net);
+                netStat.RemoveAt(index);
+                netStat.Insert(index, result);
+                //net = result;
+
+                // NetStat.Remove();
+                // NetStat.Insert(0, result);
+
+            }
+            else
+            {
+                NetStat.Insert(0, result);
+            }
+
+            if (isBusy)
+                IsBusy = false;
         }
 
         private bool isBusy;

@@ -5,65 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpiumNetStat.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="SeparatorBrush" Value="Transparent"/>
-            <Setter Property="Background" Value="#777783"/>
-            <Setter Property="Foreground" Value="WhiteSmoke"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-        </Style>
-        <Style x:Key="HeadingLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#777783"/>
-            <Setter Property="FontWeight" Value="ExtraBold"/>
-            <Setter Property="Padding" Value="0,0,15,0"/>
-        </Style>
-
-        <Style TargetType="{x:Type DataGrid}">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="AlternatingRowBackground" Value="#FFE2EEF3"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="Transparent"/>
-            <Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
-
-            <Setter Property="CellStyle">
-                <Setter.Value>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Foreground" Value="#FF0F0F0F"/>
-                        <Setter Property="Padding" Value="2" />
-                        <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="FontSize" Value="11"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="DataGridCell">
-                                    <Border Padding="{TemplateBinding Padding}" 
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            Background="{TemplateBinding Background}">
-                                        <ContentPresenter />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-
-
-                    </Style>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Storyboard x:Key="OnLoaded1"/>
-
+     
     </UserControl.Resources>
     <UserControl.Triggers>
       
@@ -72,7 +20,7 @@
 
 
     <Grid x:Name="grid">
-        <VisualStateManager.VisualStateGroups>
+       <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="BusyState" GeneratedDuration="1:1:1" To="RegularState">
@@ -103,9 +51,45 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-     
-        <ScrollViewer x:Name="scrollViewer" Margin="20">
-            <ItemsControl ItemsSource="{Binding NetStat}">
+
+
+        <DataGrid ItemsSource="{Binding NetStat}" AutoGenerateColumns="false" IsReadOnly="True" SelectionMode="Single" FontSize="12" >
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Copy" Icon="{materialDesign:PackIcon Kind=ContentCopy}" Command="Copy" />
+                    <MenuItem Header="Block IP" Icon="{materialDesign:PackIcon Kind=Biohazard}" />
+                    <MenuItem Header="Scan IP" Icon="{materialDesign:PackIcon Kind=Scanner}" />
+                    <MenuItem Header="Kill App" Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Actions" Header="LastSeen"  Binding="{Binding LastSeen, StringFormat=t}"/>
+                <DataGridTemplateColumn Header="App">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Icon}" Height="12"  />
+                                <TextBlock Text="{Binding Software}" Margin="5,0"/>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn x:Name="Remote_IP" Header="Remote IP" Binding="{Binding RemoteIP}"/>
+                <DataGridTextColumn x:Name="Host" Header="Host"  Binding="{Binding Host}"/>
+                <DataGridTextColumn x:Name="Port_Number" Header="Port" Binding="{Binding PortNumber}"/>
+                <DataGridTextColumn x:Name="Org" Header="Org" Binding="{Binding Org}"/>
+                <DataGridTextColumn x:Name="Country" Header="Origin" Binding="{Binding CountryCode}"/>
+                <DataGridTextColumn x:Name="City" Header="City" Binding="{Binding City}"/>
+                <!--<DataGridTextColumn x:Name="Port_Use" Header="PortInfo Use" Binding="{Binding PortNormalyUsedBy}"/>
+                    <DataGridTextColumn x:Name="Port_Official" Header="Port Status" Binding="{Binding PortOfficial}"/>-->
+                <!--<DataGridTextColumn x:Name="ConnectionStatus" Header="Status" Binding="{Binding ConnectionStatus}"/>-->
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--<ItemsControl ItemsSource="{Binding NetStat}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                       
@@ -123,11 +107,12 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                                 
                                 <TextBlock Text="{Binding LastSeen, StringFormat=t}" Margin="5,0,5,0"  FontSize="11"  VerticalAlignment="Center" />
-                                <fa:FontAwesome Icon="Laptop" Margin="0,0,5,0"  VerticalAlignment="Center" />
+                                <Image Source="{Binding Icon}" Height="12" Width="13"  Margin="2,0,5,0"  VerticalAlignment="Center" Stretch="Fill" />
                                 <TextBlock Text="{Binding Software}" Width="180"  FontSize="11"  VerticalAlignment="Center" />
                                 <TextBlock Text=" : " FontSize="11"  VerticalAlignment="Center" />
                                 <TextBlock Text="{Binding PortNumber}" Width="40"  FontSize="11"  VerticalAlignment="Center" />
                                 <TextBlock Text="{Binding CountryCode}"  Margin="0,0,15,0" Width="20" FontSize="11"  VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Host}" Width="320"  FontSize="11"  VerticalAlignment="Center" />
                                 <TextBlock Text="{Binding RemoteIP}" Width="120"  FontSize="11"  VerticalAlignment="Center" />
                                 <TextBlock Text="{Binding Org}" Width="250" FontSize="11"  VerticalAlignment="Center"  />
 
@@ -165,8 +150,8 @@
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+            </ItemsControl>-->
+        <!--</ScrollViewer>-->
         <Border Background="#CC2B2B2B" x:Name="border" Visibility="Collapsed">
             <TextBlock Text="LOADING..." Foreground="#66FFFFFF" HorizontalAlignment="Center" Opacity="0.6" VerticalAlignment="Center" FontSize="100" Margin="-20" >
                 <TextBlock.Effect>
