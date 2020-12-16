@@ -208,6 +208,7 @@
     <Compile Include="events\NetStatReadEvent.cs" />
     <Compile Include="model\IpInfo.cs" />
     <Compile Include="model\ProcessIPInfo.cs" />
+    <Compile Include="model\SessionListItem.cs" />
     <Compile Include="Pipeline\IPipeLine.cs" />
     <Compile Include="Pipeline\PipelineAction.cs" />
     <Compile Include="Pipeline\PipeLineController.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="ViewModels\ConnectionsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\NetStatViewModel.cs" />
+    <Compile Include="ViewModels\ObservableCollectionEx.cs" />
     <Compile Include="ViewModels\RegionViewModelBase.cs" />
     <Compile Include="ViewModels\TCPGlobalParametersViewModel.cs" />
     <Compile Include="ViewModels\TrafficViewModel.cs" />

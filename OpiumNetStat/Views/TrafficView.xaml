@@ -9,6 +9,24 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="1200">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.LightBlue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
        
         <Grid.ColumnDefinitions>
@@ -33,33 +51,101 @@
 
                    
                     <Border Grid.Column="0" Padding="6" MinHeight="100">
-                        <Button
+                        <Button Command="{Binding ProxyTrafficCommand}"
   Style="{StaticResource MaterialDesignFloatingActionButton}"
-  materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
-  materialDesign:ButtonProgressAssist.Value="0"
+  materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding IsProxyOn}"
+  materialDesign:ButtonProgressAssist.Value="-1"
   materialDesign:ButtonProgressAssist.IsIndeterminate="True"
-  Content="{materialDesign:PackIcon Kind=AccessPoint}" />
+  Content="{materialDesign:PackIcon Kind=AccessPointNetwork}" />
                     </Border>
                     <Border Grid.Column="1" Margin="5">
-                        <TextBlock Text="Traffic inspection is done by capturing traffic via proxy which allows to intercept browser traffic and analyze connections in greater detail. Backlight inspection will analyze connection in a background for beacons, trackers and keyloggers (!) Proxy connection might slow down your web browsing or interfer with other connections such as VPN. Keep it turned off if you experience connections issues and not actively observing traffic " FontSize="15" Foreground="Gray" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextWrapping="Wrap" />
+                        <StackPanel>
+                            <RichTextBox FontSize="12"
+    MinWidth="280"
+    AcceptsReturn="False"
+    IsDocumentEnabled="True"
+    IsReadOnly="True"
+    Foreground="Gray"
+    BorderThickness="0"
+    VerticalScrollBarVisibility="Disabled"
+    SpellCheck.IsEnabled="True"
+    materialDesign:HintAssist.Hint="Multiline text">
+                                <FlowDocument>
+                                    <Paragraph>
+                                        <Run>
+                                            Traffic inspection is done by setting up proxy server on your local machine and capturing all traffic passing by.
+                                            Proxy allows to intercept browser traffic and analyze connections in greater detail.
+                                        </Run>
+                                        <LineBreak />
+                                        
+                                        <Run>
+                                            Backlight inspector a will analyze connection in a background by creating headless 
+                                       browser and running inspection for beacons, trackers, behavior monitors, facebook pixel and keyloggers.
+                                        </Run>
+                                        <LineBreak />
+                                        Proxy connection might slow down your web browsing or interfer with other connections such as VPN. 
+                                       Keep it turned off if you experience connections issues and not actively observing traffic.
+
+
+                                    </Paragraph>
+                                    <Paragraph FlowDirection="RightToLeft">
+                                        <Run>
+                                           
+                                       Your can also control proxy settings by going to
+                                        </Run>
+                                        <Hyperlink  Cursor="Hand" Command="">PC Settings => Network => Proxy</Hyperlink>
+                                    </Paragraph>
+                                </FlowDocument>
+                            </RichTextBox>
+                            
+                            <TextBlock Visibility="Collapsed" Text="Traffic inspection is done by setting up proxy server on your local machine and capturing all traffic passing by. 
+                                       Proxy allows to intercept browser traffic and analyze connections in greater detail. 
+                                       Backlight inspector a will analyze connection in a background by creating headless 
+                                       browser and running inspection for beacons, trackers, behavior monitors, facebook pixel and keyloggers. 
+                                       (!) Proxy connection might slow down your web browsing or interfer with other connections such as VPN. 
+                                       Keep it turned off if you experience connections issues and not actively observing traffic. 
+                                       Your can also control proxy settings by going to PC Settings->Network->Proxy" FontSize="14" Foreground="Gray" 
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Center" TextWrapping="Wrap" />
+
+
+
+                        </StackPanel>
                     </Border>
                 </Grid>
               
             </materialDesign:Card>
-            <ListView Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Sessions}"
+            <ListView Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Sessions}" FontSize="11"
                   SelectedItem="{Binding SelectedSession}" >
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="_Copy" Icon="{materialDesign:PackIcon Kind=ContentCopy}" Command="Copy"  />
+                        <MenuItem Header="Block IP" Icon="{materialDesign:PackIcon Kind=Biohazard}" />
+                        <MenuItem Header="Scan IP" Icon="{materialDesign:PackIcon Kind=Scanner}" />
+                        <MenuItem Header="Kill App" Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="App" DisplayMemberBinding="{Binding Process}" />
+                        <GridViewColumn Header="App">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding ProcIcon}" Height="12"  />
+                                        <TextBlock Text="{Binding Process}" Margin="5,0"/>
+                                    </StackPanel>
+
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Protocol" DisplayMemberBinding="{Binding Protocol}" />
                         <GridViewColumn Header="Host" DisplayMemberBinding="{Binding Host}" />
                         <GridViewColumn Header="Sent" DisplayMemberBinding="{Binding SentDataCount}" />
                         <GridViewColumn Header="Received" DisplayMemberBinding="{Binding ReceivedDataCount}" />
-                        <GridViewColumn Header="IP" DisplayMemberBinding="{Binding ClientRemoteEndPoint}" />
-                        <GridViewColumn Header="3rd Party Cookies" DisplayMemberBinding="{Binding ClientRemoteEndPoint}" />
-                        <GridViewColumn Header="Trackers" DisplayMemberBinding="{Binding ClientRemoteEndPoint}" />
-                        <GridViewColumn Header="Keyloggers" DisplayMemberBinding="{Binding ClientRemoteEndPoint}" />
-                        <GridViewColumn Header="Facebook Pixel" DisplayMemberBinding="{Binding ClientRemoteEndPoint}" />
+                        <GridViewColumn Header="IP" DisplayMemberBinding="{Binding RemoteIP}" />
+                        <!--<GridViewColumn Header="3rd Party Cookies" DisplayMemberBinding="{Binding Url}" />-->
+                        <GridViewColumn Header="Trackers" DisplayMemberBinding="{Binding Country}" />
+                        <GridViewColumn Header="Keyloggers" DisplayMemberBinding="{Binding City}" />
+                        <GridViewColumn Header="Facebook Pixel" DisplayMemberBinding="{Binding State}" />
                     </GridView>
                 </ListView.View>
             </ListView>

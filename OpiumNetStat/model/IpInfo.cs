@@ -10,6 +10,7 @@
         public string Org { get; set; }
         public string Ip { get; set; }
         public string Isp { get; set; }
+        public string Query { get; set; }
     }
 
    
