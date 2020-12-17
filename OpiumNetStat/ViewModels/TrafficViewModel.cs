@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
+using OpiumNetStat.events;
 using OpiumNetStat.model;
+using OpiumNetStat.Model;
 using OpiumNetStat.services;
+using OpiumNetStat.utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,11 +25,11 @@ using Titanium.Web.Proxy.Models;
 
 namespace OpiumNetStat.ViewModels
 {
-    public class TrafficViewModel: BindableBase
+    public class TrafficViewModel : BindableBase
     {
         IEventAggregator _ea;
         IConnectionsService _cs;
-
+        IIpInfoService _iis;
         ExplicitProxyEndPoint explicitEndPoint;
 
         private readonly ProxyServer proxyServer;
@@ -41,28 +45,29 @@ namespace OpiumNetStat.ViewModels
         }
 
 
-        public TrafficViewModel(IEventAggregator ea)
+        public TrafficViewModel(IEventAggregator ea, IIpInfoService iis)
         {
             _ea = ea;
+            _iis = iis;
+
             ProxyTrafficCommand = new DelegateCommand(TurnOnProxy, CanTurnOnProxy);
             IsProxyOn = false;
 
             proxyServer = new ProxyServer();
             proxyServer.ForwardToUpstreamGateway = true;
 
-           
-       
-
-            proxyServer.BeforeRequest += BeforeRequest;
-            proxyServer.BeforeResponse += BeforeResponse;
-            
-
         }
 
-      
 
-        private readonly Dictionary<string, SessionListItem> sessionDictionary =
-           new Dictionary<string, SessionListItem>();
+
+        private Dictionary<string, SessionListItem> sessionDictionary = new
+            Dictionary<string, SessionListItem>();
+
+        private Dictionary<string, IpInfo> ipDictionary = new
+           Dictionary<string, IpInfo>();
+
+        //private readonly Dictionary<string, SessionListItem> sessionDictionary =
+        //   new Dictionary<string, SessionListItem>();
 
         public ObservableCollectionEx<SessionListItem> Sessions { get; } = new ObservableCollectionEx<SessionListItem>();
 
@@ -75,200 +80,193 @@ namespace OpiumNetStat.ViewModels
                 if (value != selectedSession)
                 {
                     selectedSession = value;
-                    selectedSessionChanged();
+                    //selectedSessionChanged();
                 }
             }
         }
 
-        private async Task TunnelBeforeResponse(object sender, TunnelConnectSessionEventArgs e)
+
+        private async Task BeforeResponse(object sender, SessionEventArgsBase e)
         {
-            if(e!=null && e.HttpClient!=null && e.HttpClient.Request!=null && e.HttpClient.Request.Host!=null)
+
+            if (e.HttpClient.Request.Host != null)
             {
-                var host = e.HttpClient.Request.Host.Split(':').FirstOrDefault();
-                
-                await Application.Current.Dispatcher.InvokeAsync(() =>
+                var host = e.HttpClient.Request.Host.Split(':').First();
+
+                if (sessionDictionary.TryGetValue(host, out var item))
                 {
-                        if (sessionDictionary.TryGetValue(host, out var item))
-                        {
-                            item.Update(e);
-                        }
 
-                });
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
 
+                        item.Update(e);
+
+                    });
+
+
+
+
+                }
             }
-          
 
-           
         }
 
-        private async Task BeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
+
+        //private async Task<SessionListItem> Prune(SessionListItem item)
+        //{
+        //    if(string.IsNullOrEmpty(item.RemoteIp))
+        //    {
+        //        item.RemoteIp =  Dns.GetHostAddresses(item.Host)[0].ToString();
+        //    }
+
+        //    if(item.IpInfo is null || string.IsNullOrEmpty(item.IpInfo.CountryCode))
+        //    {
+        //        item.IpInfo = await GetIpInfo(item.Host);
+        //    }
+
+        //    if (item.ProcessInfo is null || item.ProcessInfo.ProcessName.Equals("-") || item.ProcessInfo.ProcessName.Equals("Idle"))
+        //    {
+        //        var request = item.HttpClient.Request;
+
+        //        item.ProcessInfo = new ProcessIPInfo(item.HttpClient.ProcessId.Value)
+        //        {
+        //            Protocol = request.RequestUri.Scheme,
+        //            Port = 80
+        //        };
+        //    }
+
+        //    return item;
+        //}
+
+        private async Task BeforeRequest(object sender, SessionEventArgsBase e)
         {
-               await Application.Current.Dispatcher.InvokeAsync(() =>
-               { 
-                   addSession(e); 
-               });
+
+            await AddSession(e);
         }
 
 
+        public async Task AddSession(SessionEventArgsBase e)
+        {
 
-        private SessionListItem addSession(SessionEventArgsBase e)
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await addSessionAsync(e);
+            });
+        }
+
+        private bool hasIpInfo(SessionEventArgsBase e)
+        {
+            var host = e.HttpClient.Request.Host;
+            try
+            {
+                return sessionDictionary[host].IpInfo != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task addSessionAsync(SessionEventArgsBase e)
         {
             var item = createSessionListItem(e);
-           
-            if(!sessionDictionary.ContainsKey(item.Host))
+
+
+            var host = e.HttpClient.Request.Host.Split(':').First();
+
+            //foreach (var em in Sessions.Where(x => x.IpInfo is null))
+            //{
+            //    if (!ipDictionary.ContainsKey(em.RemoteIp))
+            //    {
+            //        ipDictionary.Add(em.RemoteIp, await getIpInfo(em.RemoteIp));
+
+            //    }
+
+            //}
+
+            if (ipDictionary.TryGetValue(item.RemoteIp, out var i))
             {
-                sessionDictionary.Add(item.Host, item);
-
-            }else
-            {
-                
-                if(!string.IsNullOrEmpty(item.Url))
-                {
-                    sessionDictionary[item.Host].Url = item.Url;
-                }
-
-            }
-
-            if (string.IsNullOrEmpty(sessionDictionary[item.Host].RemoteIP))
-            {
-                var ips = Dns.GetHostAddresses(item.Host);
-
-                sessionDictionary[item.Host].RemoteIP = ips[0].ToString();
-
-                //Application.Current.Dispatcher.InvokeAsync(async () =>
-                //{
-
-                //    var ipinfo = await GetIpInfo(item.Host);
-
-                //    if (ipinfo != null)
-                //    {
-                //        sessionDictionary[item.Host].RemoteIP = ipinfo.Query;
-                //        sessionDictionary[item.Host].City = ipinfo.City;
-                //        sessionDictionary[item.Host].Country = ipinfo.CountryCode;
-                //        sessionDictionary[item.Host].State = ipinfo.Region;
-                //    }
-                //});
-
-
-            }
-
-
-            if (Sessions.Any(x => x.Host.Equals(item.Host)))
-            {
-                var session = Sessions.Where(x => x.Host.Equals(item.Host)).FirstOrDefault();
-                var index = Sessions.IndexOf(session);
-                Sessions.RemoveAt(index);
-                Sessions.Insert(index, sessionDictionary[item.Host]);
+                item.IpInfo = i;
 
             }
             else
             {
-                Sessions.Insert(0, sessionDictionary[item.Host]);
+                i = await getIpInfo(item.RemoteIp);
+                ipDictionary.Add(item.RemoteIp, i);
+                item.IpInfo = i;
             }
 
 
-            return item;
+            if (!sessionDictionary.ContainsKey(host))
+            {
+                sessionDictionary.Add(item.Host, item);
+                Sessions.Insert(0, sessionDictionary[item.Host]);
+            }
+            else
+            {
+
+                if (!string.IsNullOrEmpty(item.Url))
+                {
+                    sessionDictionary[item.Host].Url = item.Url;
+                }
+
+                var session = Sessions.Where(x => x.Host.Equals(item.Host)).FirstOrDefault();
+                if (session != null)
+                {
+
+                    var index = Sessions.IndexOf(session);
+                    Sessions.RemoveAt(index);
+                    Sessions.Insert(index, sessionDictionary[item.Host]);
+
+                }
+
+            }
+
+            
+           
+
         }
 
         private SessionListItem createSessionListItem(SessionEventArgsBase e)
         {
             bool isTunnelConnect = e is TunnelConnectSessionEventArgs;
 
-
             var item = new SessionListItem
-            {              
+            {
                 HttpClient = e.HttpClient,
-                IsTunnelConnect = isTunnelConnect
+                IsTunnelConnect = isTunnelConnect,
+                Host = e.HttpClient.Request.Host
             };
-
-            e.DataReceived += (sender, args) =>
-            {
-                var session = (SessionEventArgsBase)sender;
-
-                if(!string.IsNullOrEmpty(session.HttpClient.Request.Host))
-                {
-                    if (sessionDictionary.TryGetValue(session.HttpClient.Request.Host, out var li))
-                    {
-                        var connectRequest = session.HttpClient.ConnectRequest;
-                        var tunnelType = connectRequest?.TunnelType ?? TunnelType.Unknown;
-                        if (tunnelType != TunnelType.Unknown)
-                        {
-                            li.Protocol = TunnelTypeToString(tunnelType);
-                        }
-
-                        li.ReceivedDataCount += args.Count;
-
-                    }
-                }
-
-               
-            };
-
-            e.DataSent += (sender, args) =>
-            {
-                var session = (SessionEventArgsBase)sender;
-                var host = session.HttpClient.Request.Host;
-
-                if(!string.IsNullOrEmpty(host))
-                {
-                    if (sessionDictionary.TryGetValue(host, out var li))
-                    {
-                        var connectRequest = session.HttpClient.ConnectRequest;
-
-
-                        var tunnelType = connectRequest?.TunnelType ?? TunnelType.Unknown;
-                        if (tunnelType != TunnelType.Unknown)
-                        {
-                            li.Protocol = TunnelTypeToString(tunnelType);
-                        }
-
-                        li.SentDataCount += args.Count;
-
-                    }
-                }
-               
-            };
-
-            if (e is TunnelConnectSessionEventArgs te)
-            {
-                te.DecryptedDataReceived += (sender, args) =>
-                {
-                    var session = (SessionEventArgsBase)sender;
-                   
-                };
-
-                te.DecryptedDataSent += (sender, args) =>
-                {
-                    var session = (SessionEventArgsBase)sender;
-                   
-                };
-            }
 
             item.Update(e);
+
             return item;
         }
 
-        private async Task<IpInfo> GetIpInfo(string host)
+
+        private async Task<IpInfo> getIpInfo(string ip)
         {
-            using (var client = new WebClient())
+            try
             {
-                try
+                using (WebClient client = new WebClient())
                 {
-                    var uri = new Uri($"http://ip-api.com/json/{host}");
-
-                    var json = await client.DownloadStringTaskAsync(uri);
+                    var json = await client.DownloadStringTaskAsync($"http://ip-api.com/json/{ip}");
                     return JsonConvert.DeserializeObject<IpInfo>(json);
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.Write(ex.Message);
-                    return null;
                 }
             }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Debug.WriteLine(ex.Message);
+#endif
+                return null;
+            }
+
         }
 
-        private string TunnelTypeToString(TunnelType tunnelType)
+
+
+        private string TunnelTypeToPort(TunnelType tunnelType)
         {
             switch (tunnelType)
             {
@@ -282,56 +280,6 @@ namespace OpiumNetStat.ViewModels
 
             return null;
         }
-
-        
-
-        private async Task BeforeResponse(object sender, SessionEventArgs e)
-        {
-            SessionListItem item = null;
-            IpInfo ipinfo = null;
-
-            if (e != null && e.HttpClient != null && e.HttpClient.Request != null && e.HttpClient.Request.Host != null)
-            {
-                var host = e.HttpClient.Request.Host.Split(':').FirstOrDefault();
-
-                await Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    if (sessionDictionary.TryGetValue(host, out var item))
-                    {
-                        item.Update(e);
-                    }
-
-                });
-
-            }
-
-
-            if (item != null)
-            {
-                await Application.Current.Dispatcher.InvokeAsync(() => 
-                 { 
-                        item.Update(e); 
-                 });
-                
-            }
-        }
-
-        private void selectedSessionChanged()
-        {
-            //throw new NotImplementedException();
-        }
-
-        private async Task BeforeRequest(object sender, SessionEventArgs e)
-        {
-            SessionListItem item = null;
-
-            await Application.Current.Dispatcher.InvokeAsync(() => 
-            { 
-                item = addSession(e); 
-            });
-
-        }
-
         private bool CanTurnOnProxy()
         {
             return true;
@@ -339,30 +287,35 @@ namespace OpiumNetStat.ViewModels
 
         private void TurnOnProxy()
         {
-           if(!IsProxyOn)
+            if (!IsProxyOn)
             {
                 explicitEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, 8333, true);
                 proxyServer.AddEndPoint(explicitEndPoint);
 
-                explicitEndPoint.BeforeTunnelConnectRequest += BeforeTunnelConnectRequest;
-                explicitEndPoint.BeforeTunnelConnectResponse += TunnelBeforeResponse;
+                explicitEndPoint.BeforeTunnelConnectRequest += BeforeResponse; ;
+                explicitEndPoint.BeforeTunnelConnectResponse += BeforeResponse;
+                proxyServer.BeforeRequest += BeforeRequest;
+                proxyServer.BeforeResponse += BeforeResponse;
 
                 proxyServer.Start();
                 proxyServer.SetAsSystemProxy(explicitEndPoint, ProxyProtocolType.AllHttp);
-               
+
                 IsProxyOn = true;
             }
             else
             {
                 proxyServer.Stop();
 
-                explicitEndPoint.BeforeTunnelConnectRequest -= BeforeTunnelConnectRequest;
-                explicitEndPoint.BeforeTunnelConnectResponse -= TunnelBeforeResponse;
-
+                explicitEndPoint.BeforeTunnelConnectRequest -= BeforeRequest;
+                explicitEndPoint.BeforeTunnelConnectResponse -= BeforeResponse;
+                proxyServer.BeforeRequest -= BeforeRequest;
+                proxyServer.BeforeResponse -= BeforeResponse;
 
                 proxyServer.RestoreOriginalProxySettings();
                 IsProxyOn = false;
             }
         }
+
+
     }
 }

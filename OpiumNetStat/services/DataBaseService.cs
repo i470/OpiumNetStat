@@ -23,33 +23,33 @@ namespace OpiumNetStat.services
 
             using (var db = new LiteDatabase(DB.Path))
             {
-                var col = db.GetCollection<NetStatResult>(DB.CollConnections);
-                exist = col.Exists(x => x.RemoteIP.Equals(ip.Trim()));
+                var col = db.GetCollection<NetStatItemViewModel>(DB.CollConnections);
+                exist = col.Exists(x => x.RemoteIp.Equals(ip.Trim()));
             }
 
             return exist;
         }
 
 
-        public NetStatResult GetNetStatRecord(string ip)
+        public NetStatItemViewModel GetNetStatRecord(string ip)
         {
 
             using (var db = new LiteDatabase(DB.Path))
             {
-                var col = db.GetCollection<NetStatResult>(DB.CollConnections);
-                return col.Query().Where(x => x.RemoteIP.Equals(ip)).FirstOrDefault();
+                var col = db.GetCollection<NetStatItemViewModel>(DB.CollConnections);
+                return col.Query().Where(x => x.RemoteIp.Equals(ip)).FirstOrDefault();
             }
 
         }
 
 
-        public NetStatResult Upsert(NetStatResult netStat)
+        public NetStatItemViewModel Upsert(NetStatItemViewModel netStat)
         {
 
             using (var db = new LiteDatabase(DB.Path))
             {
-                var col = db.GetCollection<NetStatResult>(DB.CollConnections);
-                var result = col.Query().Where(x => x.RemoteIP.Equals(netStat.RemoteIP)).FirstOrDefault();
+                var col = db.GetCollection<NetStatItemViewModel>(DB.CollConnections);
+                var result = col.Query().Where(x => x.RemoteIp.Equals(netStat.RemoteIp)).FirstOrDefault();
 
                 db.BeginTrans();
 
@@ -64,7 +64,7 @@ namespace OpiumNetStat.services
                     col.Upsert(result);
                 }
 
-                col.EnsureIndex(x => x.RemoteIP);
+                col.EnsureIndex(x => x.RemoteIp);
                 db.Commit();
             }
 
@@ -72,17 +72,5 @@ namespace OpiumNetStat.services
         }
 
 
-        public List<NetStatResult> Get24HourDataAsync()
-        {
-            using (var db = new LiteDatabase(DB.Path))
-            {
-                var col = db.GetCollection<NetStatResult>(DB.CollConnections);
-
-                var data = col.FindAll().Where(x => x.LastSeen > DateTime.Now.AddHours(-24)).ToList();
-
-                return data;
-
-            }
-        }
     }
 }

@@ -206,6 +206,9 @@
     <Compile Include="events\ExceptionEvent.cs" />
     <Compile Include="events\IsBusyEvent.cs" />
     <Compile Include="events\NetStatReadEvent.cs" />
+    <Compile Include="events\ProxyConnectionEvent.cs" />
+    <Compile Include="model\ConnectionBase.cs" />
+    <Compile Include="model\IConnection.cs" />
     <Compile Include="model\IpInfo.cs" />
     <Compile Include="model\ProcessIPInfo.cs" />
     <Compile Include="model\SessionListItem.cs" />
@@ -229,6 +232,7 @@
     <Compile Include="utils\Helper.cs" />
     <Compile Include="utils\PeriodicTask.cs" />
     <Compile Include="utils\ProcessInformation.cs" />
+    <Compile Include="utils\RetryHelper.cs" />
     <Compile Include="ViewModels\ConnectionsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\NetStatViewModel.cs" />
@@ -266,7 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="model\BaseNotify.cs" />
-    <Compile Include="model\NetStatResult.cs" />
+    <Compile Include="model\NetStatItemViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

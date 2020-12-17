@@ -73,44 +73,51 @@ namespace OpiumNetStat.services
                                 int port;
                                 int pid;
 
-                                var pinfo = new ProcessIPInfo();
-                                pinfo.remote_ip = ip.ToString();
+                                ProcessIPInfo pinfo;
 
-                                if (int.TryParse(tokens[3].Split(':')[1], out port))
-                                {
-                                    pinfo.port_number = port;
-                                }
+                               
+
+                                
 
                                 if (int.TryParse(tokens[5], out pid))
                                 {
+                                    pinfo = new ProcessIPInfo(pid);
                                     pinfo.PID = pid;
-                                    pinfo.process_name = LookupProcess(pid);
+                                    pinfo.ProcessName = LookupProcess(pid);
 
-                                    if(icons.ContainsKey(pinfo.process_name))
+                                    if(icons.ContainsKey(pinfo.ProcessName))
                                     {
-                                        if(icons[pinfo.process_name]==null)
+                                        if(icons[pinfo.ProcessName]==null)
                                         {
-                                            icons[pinfo.process_name] = GetProcessIcon(pid);
+                                            icons[pinfo.ProcessName] = GetProcessIcon(pid);
                                         }
                                     }
                                     else
                                     {
-                                        icons.Add(pinfo.process_name, GetProcessIcon(pid));
+                                        icons.Add(pinfo.ProcessName, GetProcessIcon(pid));
                                     }
 
-                                    pinfo.icon = icons[pinfo.process_name];
+                                    pinfo.Icon = icons[pinfo.ProcessName];
+
+                                    if (int.TryParse(tokens[3].Split(':')[1], out port))
+                                    {
+                                        pinfo.Port = port;
+                                    }
+
+                                    pinfo.RemoteIp = ip.ToString();
+                                    pinfo.ConnectionStatus = tokens[4];
+                                    pinfo.Protocol = tokens[1];
+                                    NetStatRegistry.Add(ip, pinfo);
+
+                                    _ea.GetEvent<NetStatReadEvent>().Publish(pinfo);
                                 }
 
-                                pinfo.status = tokens[4];
-                                pinfo.protocol = tokens[1];
-                                NetStatRegistry.Add(ip,pinfo);
-
-                                _ea.GetEvent<NetStatReadEvent>().Publish(pinfo);
+                               
                             }
                             else
                             {
                                 var knownRecord = NetStatRegistry[ip];
-                                knownRecord.status = tokens[4];
+                                knownRecord.ConnectionStatus = tokens[4];
                                 _ea.GetEvent<NetStatReadEvent>().Publish(knownRecord);
                             }
 

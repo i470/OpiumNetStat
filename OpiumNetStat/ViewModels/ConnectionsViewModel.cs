@@ -23,16 +23,16 @@ namespace OpiumNetStat.ViewModels
         IDataPipeLineService _dps;
         
 
-        private ObservableCollection<NetStatResult> netStat;
-        public ObservableCollection<NetStatResult> NetStat
+        private ObservableCollection<NetStatItemViewModel> netStat;
+        public ObservableCollection<NetStatItemViewModel> NetStat
         {
 
             get => netStat;
             set { SetProperty(ref netStat, value); }
         }
 
-        private NetStatResult _selectedNetStat;
-        public  NetStatResult SelectedNetStat
+        private NetStatItemViewModel _selectedNetStat;
+        public  NetStatItemViewModel SelectedNetStat
         {
 
             get => _selectedNetStat;
@@ -47,7 +47,7 @@ namespace OpiumNetStat.ViewModels
             _ea = ea;
             _dps = dps;
 
-            NetStat = new ObservableCollection<NetStatResult>();
+            NetStat = new ObservableCollection<NetStatItemViewModel>();
 
             _ea.GetEvent<ConnectionUpdateEvent>().Subscribe(UpdateConnections, ThreadOption.UIThread);
 
@@ -61,19 +61,19 @@ namespace OpiumNetStat.ViewModels
 
                
 
-            }, intervalInMilliseconds: 10000, synchronous: true, cancelToken: cancellationTokenSource.Token);
+            }, intervalInMilliseconds: 3000, synchronous: true, cancelToken: cancellationTokenSource.Token);
 
          
 
         }
 
-        private void UpdateConnections(NetStatResult result)
+        private void UpdateConnections(NetStatItemViewModel result)
         {
           
 
-            if (NetStat.Any(x=>x.RemoteIP.Equals(result.RemoteIP)))
+            if (NetStat.Any(x=>x.RemoteIp.Equals(result.RemoteIp)))
             {
-                var net = netStat.Where(x => x.RemoteIP.Equals(result.RemoteIP)).FirstOrDefault();
+                var net = netStat.Where(x => x.RemoteIp.Equals(result.RemoteIp)).FirstOrDefault();
                 var index = netStat.IndexOf(net);
                 netStat.RemoveAt(index);
                 netStat.Insert(index, result);
@@ -122,22 +122,6 @@ namespace OpiumNetStat.ViewModels
            
         }
 
-        private void UpdateConnections(List<NetStatResult> result)
-        {
-            if (result is null) return;
-            if (result.Count == 0) return;
-
-            var hashset = new HashSet<NetStatResult>(NetStat.ToList(),new NetStatResultComparer());
-            hashset.SymmetricExceptWith(result);
-            var merged = hashset.OrderByDescending(x => x.LastSeen).ToList();
-
-            NetStat.Clear();
-            NetStat.AddRange(merged);
-
-
-            if (isBusy)
-                IsBusy = false;
-
-        }
+        
     }
 }

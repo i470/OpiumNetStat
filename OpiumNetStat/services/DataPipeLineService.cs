@@ -17,8 +17,8 @@ namespace OpiumNetStat.services
         IEventAggregator ea;
         IDataBaseService db;
         IIpInfoService ips;
-        List<NetStatResult> netStatList = new List<NetStatResult>();
-        Dictionary<string, NetStatResult> netStatDict = new Dictionary<string, NetStatResult>();
+        List<NetStatItemViewModel> netStatList = new List<NetStatItemViewModel>();
+        Dictionary<string, NetStatItemViewModel> netStatDict = new Dictionary<string, NetStatItemViewModel>();
 
         PipelineAction _getGeoInfoPipeline = new PipelineAction();
         PipelineAction _updateDBPipeline = new PipelineAction();
@@ -37,55 +37,32 @@ namespace OpiumNetStat.services
 
         private void pushPipeLine(ProcessIPInfo proc)
         {
-            if(netStatDict.ContainsKey(proc.remote_ip))
-            {
-                var er = netStatDict[proc.remote_ip];
+            //if(netStatDict.ContainsKey(proc.RemoteIp))
+            //{
+            //    var er = netStatDict[proc.RemoteIp];
+            //    er.ProcessInfo = proc;
 
-                if(string.IsNullOrEmpty(er.CountryCode))
-                {
-                    var ipInfo = ips.GetIPInfo(proc).Result;
+            //    if(er.IpInfo is null)
+            //    {
+            //       // er.IpInfo = ips.GetIPInfo(proc).Result;
+            //    }
 
+            //    ea.GetEvent<ConnectionUpdateEvent>().Publish(er);
+            //}
+            //else
+            //{
+            //    var ipInfo = ips.GetIPInfo(proc).Result;
 
-                    if (ipInfo != null && string.IsNullOrEmpty(ipInfo.CountryCode))
-                    {
-                        er.CountryCode = ipInfo.CountryCode;
-                        er.City = ipInfo.City;
-                        er.Region = ipInfo.Region;
-                    }
-                    
-                }
+            //    if(ipInfo!=null)
+            //    {
+            //        var netstat = new NetStatItemViewModel(proc);
+            //        netstat.IpInfo = ipInfo;
+            //        netstat.Host = GetHostByAddress(proc.RemoteIp);
+            //        netStatDict.Add(proc.RemoteIp, netstat);
 
-                if(string.IsNullOrEmpty(er.Software) || er.Software.Contains("-") || er.Software.Contains("Idle"))
-                {
-                   er.Software = LookupProcess(er.PID);
-                }
-
-                ea.GetEvent<ConnectionUpdateEvent>().Publish(er);
-            }
-            else
-            {
-                var ipInfo = ips.GetIPInfo(proc).Result;
-
-                if(ipInfo!=null)
-                {
-                    var netstat = new NetStatResult(proc);
-                    netstat.City = ipInfo.City;
-                    netstat.Region = ipInfo.Region;
-                    netstat.CountryCode = ipInfo.CountryCode;
-                    netstat.Org = ipInfo.Org;
-                    if(string.IsNullOrEmpty(netstat.Org))
-                    {
-                        netstat.Org = ipInfo.Isp;
-                    }
-
-                    netstat.Host = GetHostByAddress(proc.remote_ip);
-                    netstat.Software = LookupProcess(proc.PID);
-
-                    netStatDict.Add(proc.remote_ip, netstat);
-
-                    ea.GetEvent<ConnectionUpdateEvent>().Publish(netstat);
-                }
-            }
+            //        ea.GetEvent<ConnectionUpdateEvent>().Publish(netstat);
+            //    }
+            //}
 
         }
 
@@ -130,37 +107,14 @@ namespace OpiumNetStat.services
 
         //}
 
-        private void _updateDB(List<NetStatResult> geoList)
-        {
-            foreach (var geo in geoList)
-            {
-                var record = db.GetNetStatRecord(geo.RemoteIP);
-
-                if (record is null)
-                {
-                    db.Upsert(record);
-
-                }
-                else
-                {
-                    record.ConnectionStatus = geo.ConnectionStatus;
-                    record.LastSeen = geo.LastSeen;
-                    db.Upsert(record);
-                }
-            }
-        }
+      
 
         public string GetHostByAddress(string ipAddress)
         {
             try
             {
-                var host = Dns.GetHostEntry(ipAddress).HostName;
-                //var uri = host.Split('.');
-                //var l = uri.Length;
-                //var domain = $"{uri[l-2]}.{uri[l - 1]}";
-                //return domain;
-
-                return host;
+                return Dns.GetHostEntry(ipAddress).HostName;
+             
             }
             catch (Exception)
             {
