@@ -119,6 +119,8 @@
                       AutoGenerateColumns="false" IsReadOnly="True" SelectionMode="Single" FontSize="11" SelectedItem="{Binding SelectedSession}" >
                 <DataGrid.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="www.eaby.com" />
+                        <Separator      Grid.Row="1"      Style="{StaticResource MaterialDesignDarkSeparator}" />
                         <MenuItem Header="_Copy" Icon="{materialDesign:PackIcon Kind=ContentCopy}" Command="Copy"  />
                         <MenuItem Header="Block IP" Icon="{materialDesign:PackIcon Kind=Biohazard}" />
                         <MenuItem Header="Scan IP" Icon="{materialDesign:PackIcon Kind=Scanner}" />
@@ -207,9 +209,269 @@
 
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
         <Grid Grid.Column="2">
-            <materialDesign:Card>
-                
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+           
+            <materialDesign:Card Margin="10" Grid.Row="0"
+                          Background="#0288d1"
+  Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+  Padding="0"
+      
+                                 >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition        Height="Auto" />
+                        <RowDefinition        Height="Auto" />
+                        <RowDefinition        Height="Auto" />
+                            <RowDefinition        Height="Auto" />
+                            <RowDefinition        Height="Auto" />
+                        </Grid.RowDefinitions>
+                    <TextBlock      Grid.Row="0" FontSize="14"  FontWeight="Medium"    Margin="0,12,0,8" HorizontalAlignment="Center"      Style="{StaticResource MaterialDesignHeadlineTextBlock}">
+    BACKLIGHT INSPECTION
+                    </TextBlock>
+                    <Separator      Grid.Row="1"      Style="{StaticResource MaterialDesignLightSeparator}" />
+                    <TextBlock
+      Grid.Row="2"
+      Margin="16 0 16 8"
+      VerticalAlignment="Center"
+      HorizontalAlignment="Left"
+      Style="{StaticResource MaterialDesignBody1TextBlock}">
+    www.ebay.com
+                    </TextBlock>
+                    <StackPanel      Grid.Row="2"      Orientation="Horizontal"      Margin="16 0 16 8"      HorizontalAlignment="Right">
+                        <Button        HorizontalAlignment="Right"        Style="{StaticResource MaterialDesignToolForegroundButton}"        Width="30"
+        Padding="2 0 2 0"        materialDesign:RippleAssist.IsCentered="True">
+                            <materialDesign:PackIcon
+          Kind="Web" />
+                        </Button>
+
+                    </StackPanel>
+                        <Separator      Grid.Row="3"      Style="{StaticResource MaterialDesignLightSeparator}" />
+                        <StackPanel Grid.Row="4">
+                            <Expander Background="Transparent"
+    HorizontalAlignment="Stretch"
+    >
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="#ff1744"  Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                            5
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="EyePlus" Margin="9,0,3,0"/>
+                                        <TextBlock FontSize="14" FontWeight="Medium" >
+                                           Ad Trackers
+                                        </TextBlock>
+                                        </StackPanel>
+                                        <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                            <materialDesign:RatingBar          Value="3"          Orientation="Horizontal"         Foreground="WhiteSmoke"        Margin="0" />
+                                        </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel
+      Grid.Row="1"
+      Margin="24,8,24,16">
+                                 
+                                       
+                               
+                                    <TextBlock
+        Style="{StaticResource MaterialDesignBody1TextBlock}"
+        TextWrapping="Wrap" FontSize="11"
+        VerticalAlignment="Center">
+      This is less than average of seven thats found on popular sites.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Background="Transparent"    HorizontalAlignment="Stretch">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="#ff1744" Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                            8
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Cookie" Margin="9,0,3,0"/>
+                                                <TextBlock FontSize="14" FontWeight="Medium" >
+                                           Third Party Cookies
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                                <materialDesign:RatingBar          Value="1"          Orientation="Horizontal"         Foreground="White"         Margin="0" />
+                                            </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel      Orientation="Vertical" Margin="24,8,24,16">
+
+                                    <TextBlock      Style="{StaticResource MaterialDesignBody1TextBlock}" FontSize="11"
+        Text="Backlight detected 8 third-party cookies on this site. Blacklight detected cookies set for Data Plus Math, Tapad, Inc., Alphabet, Inc., and Integral Ad Science, Inc."
+        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Expander>
+
+
+                            <Expander Background="Transparent"
+    HorizontalAlignment="Stretch"
+    >
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="#ff1744" Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                            YES
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Fingerprint" Margin="9,0,3,0"/>
+                                                <TextBlock FontSize="14" FontWeight="Medium" >                                           Fingerprinting
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                                <materialDesign:RatingBar          Value="1"          Orientation="Horizontal"         Foreground="White"        Margin="0" />
+                                            </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel
+      Grid.Row="1"
+      Margin="24,8,24,16">
+
+
+
+                                    <TextBlock
+        Style="{StaticResource MaterialDesignBody1TextBlock}"
+        TextWrapping="Wrap" FontSize="11"
+        VerticalAlignment="Center">
+      Detected a script loaded from ebay-us.com doing this on this site.
+
+It secretly draws the following image on your browser when you visit this website for the purpose of identifying your device.
+                                    </TextBlock>
+
+                                    <!--<Image Source="fingerprint.PNG" Margin="0,5"/>-->
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Background="Transparent"    HorizontalAlignment="Stretch" >
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="{DynamicResource SecondaryAccentBrush}" Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                           NO
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Glasses" Margin="9,0,3,0"/>
+                                                <TextBlock FontSize="14" FontWeight="Medium" >Session Recording
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                                <materialDesign:RatingBar          Value="5"          Orientation="Horizontal"         Foreground="White"          Margin="0" />
+                                            </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel      Grid.Row="1" Margin="24,8,24,16">
+                                    <TextBlock        Style="{StaticResource MaterialDesignBody1TextBlock}"        TextWrapping="Wrap" FontSize="11" VerticalAlignment="Center">
+                                        Backlight did not detect the use of a session recorder, which tracks user mouse movement, clicks, taps, scrolls, or even network activity.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Background="Transparent"    HorizontalAlignment="Stretch" >
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="{DynamicResource SecondaryAccentBrush}" Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                           NO
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Keyboard" Margin="9,0,3,0"/>
+                                                <TextBlock FontSize="14" FontWeight="Medium" >Keylogger
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                                <materialDesign:RatingBar          Value="5"          Orientation="Horizontal"        Foreground="White"          Margin="0" />
+                                            </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel      Grid.Row="1" Margin="24,8,24,16">
+                                    <TextBlock        Style="{StaticResource MaterialDesignBody1TextBlock}"        TextWrapping="Wrap" FontSize="11" VerticalAlignment="Center">
+                                        Backlight did not detect the use of a session recorder, which tracks user mouse movement, clicks, taps, scrolls, or even network activity.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Background="Transparent"    HorizontalAlignment="Stretch" >
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="#ff1744" Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                           YES
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Facebook" Margin="9,0,3,0"/>
+                                                <TextBlock FontSize="14" FontWeight="Medium" >Facebook Pixel  </TextBlock>
+                                            </StackPanel>
+                                            <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                                <materialDesign:RatingBar          Value="2"          Orientation="Horizontal"          Foreground="LightYellow"          Margin="0" />
+                                            </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel      Grid.Row="1" Margin="24,8,24,16">
+                                    <TextBlock        Style="{StaticResource MaterialDesignBody1TextBlock}"        TextWrapping="Wrap" FontSize="11" VerticalAlignment="Center">
+                                        Backlight did not detect the use of a session recorder, which tracks user mouse movement, clicks, taps, scrolls, or even network activity.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander>
+
+
+                            <Expander Background="Transparent"    HorizontalAlignment="Stretch" >
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Margin="0,-5,0,0" CornerRadius="3" Background="{DynamicResource SecondaryAccentBrush}" Padding="5" Width="32" Height="32">
+                                            <TextBlock FontSize="14" FontWeight="Medium" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                           NO
+                                            </TextBlock>
+                                        </Border>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Facebook" Margin="9,0,3,0"/>
+                                                <TextBlock FontSize="14" FontWeight="Medium" >Google Analytics</TextBlock>
+                                            </StackPanel>
+                                            <Viewbox        Margin="9 4 0 8"        Height="16"        HorizontalAlignment="Left">
+                                                <materialDesign:RatingBar          Value="2"          Orientation="Horizontal"          Foreground="LightYellow"          Margin="0" />
+                                            </Viewbox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel      Grid.Row="1" Margin="24,8,24,16">
+                                    <TextBlock        Style="{StaticResource MaterialDesignBody1TextBlock}"        TextWrapping="Wrap" FontSize="11" VerticalAlignment="Center">
+                                        The Google Analytics "remarketing audiences" feature enables user tracking for targeted advertising across the internet. This feature allows a website to build custom audiences based on how a user interacts with this particular site and then follow those users across the internet and target them with advertising on other sites using Google Ads and Display and Video 360.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander>
+                            
+                        </StackPanel>
+                    </Grid>
             </materialDesign:Card>
+
+            
+            </Grid>
         </Grid>
     </Grid>
   

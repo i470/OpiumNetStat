@@ -333,6 +333,7 @@
     <Content Include="Lib\Simple.DotNMap.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Views\fingerprint.PNG" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="NetFwTypeLib">
