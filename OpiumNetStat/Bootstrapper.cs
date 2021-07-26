@@ -1,4 +1,5 @@
-﻿using OpiumNetStat.services;
+﻿using OpiumNetStat.model;
+using OpiumNetStat.services;
 using OpiumNetStat.Views;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -22,6 +23,9 @@ namespace OpiumNetStat
             containerRegistry.Register<IDataBaseService, DataBaseService>();
             containerRegistry.RegisterSingleton<IDataPipeLineService, DataPipeLineService>();
             containerRegistry.RegisterSingleton<IIpInfoService, IpInfoService>();
+
+            containerRegistry.Register<IConnection, SessionListItem>();
+            containerRegistry.Register<IConnection, NetStatItemViewModel>();
 
             var dp = containerRegistry.GetContainer().Resolve<IDataPipeLineService>();
           
