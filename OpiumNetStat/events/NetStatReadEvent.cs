@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace OpiumNetStat.events
 {
-    public class  NetStatReadEvent: PubSubEvent<IList<PortInfo>>
+    public class  NetStatReadEvent: PubSubEvent<ProcessIPInfo>
     {
     }
 }

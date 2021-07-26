@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using MahApps.Metro.Controls;
 using Prism.Regions;
 
 namespace OpiumNetStat.Views
@@ -8,7 +9,7 @@ namespace OpiumNetStat.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public SolidColorBrush CloseIconBrushActive = new SolidColorBrush(Colors.DarkGray);
         public SolidColorBrush CloseIconBrushInactive = new SolidColorBrush(Colors.WhiteSmoke);

@@ -17,9 +17,9 @@ namespace OpiumNetStat.Views
         public ConnectionsView(IEventAggregator ea)
         {
             InitializeComponent();
-            VisualStateManager.GoToState(this, "BusyState", true);
-            _ea = ea;
-            _ea.GetEvent<IsBusyEvent>().Subscribe(UpdateViewState);
+            //VisualStateManager.GoToState(this, "RegularState", true);
+            //_ea = ea;
+            //_ea.GetEvent<IsBusyEvent>().Subscribe(UpdateViewState);
 
 
         }

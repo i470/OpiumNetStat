@@ -10,41 +10,32 @@ namespace OpiumNetStat.services
 {
     public class IpInfoService : IIpInfoService
     {
-        public async Task<NetStatResult> GetIPInfo(PortInfo ip)
+        public async Task GetIPInfo(string ip, Action<Exception, IpInfo> callback)
         {
+          
 
             using (var client = new WebClient())
             {
                 try
                 {
-                    var uri = new Uri($"http://ip-api.com/json/{ip.remote_ip}");
+                    var uri = new Uri($"http://ip-api.com/json/{ip}");
 
 
                     var json = await client.DownloadStringTaskAsync(uri);
-                    var result = JsonConvert.DeserializeObject<Host>(json);
+                    var result = JsonConvert.DeserializeObject<IpInfo>(json);
 
-                    var record = new NetStatResult();
-                    record.ConnectionStatus = "";
-                    record.City = result.City;
-                    record.Country = result.Country;
-                    record.Org = result.Org;
-                    record.CountryCode = result.CountryCode;
-                    record.PortNumber = short.Parse(ip.port_number);
-                    record.PID = short.Parse(ip.PID);
-                    record.RemoteIP = ip.remote_ip;
-                    record.Software = ip.process_name;
-                    record.ConnectionStatus = ip.status;
-
-                    return record;
+                    callback(null, result);
+                  
                 }
                 catch (Exception ex)
                 {
                     //hitting service too fast too often
                     Debug.Write(ex.Message);
-                    return null;
+                    callback(ex, null);
                 }
 
             }
+
         }
     }
 }

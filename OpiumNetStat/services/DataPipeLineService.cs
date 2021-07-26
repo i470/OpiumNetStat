@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace OpiumNetStat.services
@@ -16,15 +17,16 @@ namespace OpiumNetStat.services
         IEventAggregator ea;
         IDataBaseService db;
         IIpInfoService ips;
-        List<NetStatResult> netStatList = new List<NetStatResult>();
+        List<NetStatItemViewModel> netStatList = new List<NetStatItemViewModel>();
+        Dictionary<string, NetStatItemViewModel> netStatDict = new Dictionary<string, NetStatItemViewModel>();
 
         PipelineAction _getGeoInfoPipeline = new PipelineAction();
         PipelineAction _updateDBPipeline = new PipelineAction();
         PipelineAction _publishNewRecordsPipeline = new PipelineAction();
 
-        public  DataPipeLineService(IEventAggregator _ea, IDataBaseService _db, IIpInfoService _ips)
+        public DataPipeLineService(IEventAggregator _ea, IDataBaseService _db, IIpInfoService _ips)
         {
-    
+
             ea = _ea;
             db = _db;
             ips = _ips;
@@ -33,108 +35,102 @@ namespace OpiumNetStat.services
         }
 
 
-        private void pushPipeLine(IList<PortInfo> portlist)
+        private void pushPipeLine(ProcessIPInfo proc)
         {
-            PipeLineController.Begin(Pipeline(portlist), ex =>
+            //remote IP is already logged
+            //publish update
+            if (netStatDict.ContainsKey(proc.RemoteIp))
             {
-                Debug.Write(ex.Message);
-                ea.GetEvent<ExceptionEvent>().Publish(ex);
-            });
-        }
+                var er = netStatDict[proc.RemoteIp];
+                er.ProcessInfo = proc;
 
-
-        private  IEnumerable<IPipeLine> Pipeline(IList<PortInfo> portlist)
-        {
-
-            //step 1 -- get IP Geo 
-            var geoList = new List<NetStatResult>();
-
-
-            _getGeoInfoPipeline.Execute = async () =>
-            {
-                geoList =  await GetGeoinfoAsync(portlist);
-
-                _getGeoInfoPipeline.Invoked();
-            };
-
-            yield return _getGeoInfoPipeline;
-
-
-            //_updateDBPipeline.Execute = () => {
-
-            //    _updateDB(netStatList);
-            //    _updateDBPipeline.Invoked();
-            //};
-
-            //yield return _updateDBPipeline;
-
-            ea.GetEvent<ConnectionUpdateEvent>().Publish(geoList);
-          
-        }
-
-        private void _updateDB(List<NetStatResult> geoList)
-        {
-            foreach (var geo in geoList)
-            {
-                var record = db.GetNetStatRecord(geo.RemoteIP);
-
-                if(record is null)
+                if (er.IpInfo is null)
                 {
-                    db.Upsert(record);
-
-                }else
-                {
-                    record.ConnectionStatus = geo.ConnectionStatus;
-                    record.LastSeen = geo.LastSeen;
-                    db.Upsert(record);
+                    // er.IpInfo = ips.GetIPInfo(proc).Result;
                 }
+
+                ea.GetEvent<ConnectionUpdateEvent>().Publish(er);
             }
+            
+            //new remote IP
+            //get IP info and update current view of connections
+            else
+            {
+                ips.GetIPInfo(proc.RemoteIp, (error,ipInfo) =>
+                {
+                    if (error == null)
+                    {
+                        var netstat = new NetStatItemViewModel(proc)
+                        {
+                            IpInfo = ipInfo, Host = GetHostByAddress(proc.RemoteIp)
+                        };
+                        
+                        netStatDict.Add(proc.RemoteIp, netstat);
+                        ea.GetEvent<ConnectionUpdateEvent>().Publish(netstat);
+                    }
+
+                });
+            }
+
         }
 
-        private async Task<List<NetStatResult>> GetGeoinfoAsync(IList<PortInfo> portlist)
+        public string LookupProcess(int pid)
         {
-            var geoList = new List<NetStatResult>();
-
+            string procName;
             try
             {
-                foreach (var ip in portlist.Where(x=>!x.remote_ip.Equals("127.0.0.1")))
-                {
-                    if(!ip.remote_ip.StartsWith("192") &&  !ip.remote_ip.StartsWith("10."))
-                    {
-                        var record = netStatList.Where(x => x.RemoteIP.Equals(ip.remote_ip.Trim())).FirstOrDefault();
-
-                        if (record is null)
-                        {
-                            record = await ips.GetIPInfo(ip);
-
-                            if (record != null)
-                            {
-                                record.LastSeen = DateTime.Now;
-                                geoList.Add(record);
-                                netStatList.Add(record);
-                            }
-
-                        }
-                        else
-                        {
-                            record.ConnectionStatus = ip.status;
-                            record.LastSeen = DateTime.Now;
-                        }
-                    }
-                    
-                }
-
-                return geoList;
+                procName =Process.GetProcessById(pid).ProcessName ;
             }
-            catch (Exception ex)
-            {
-               
-                Debug.Write(ex.Message);
-                return null;
-            }
-           
+            catch (Exception) { procName = "-"; }
+            return procName;
         }
 
-        
+
+        //private  IEnumerable<IPipeLine> Pipeline(IList<ProcessIPInfo> processlist)
+        //{
+
+        //    ////step 1 -- get IP Geo 
+        //    //var geoList = new List<NetStatResult>();
+
+
+        //    //_getGeoInfoPipeline.Execute = async () =>
+        //    //{
+        //    //    geoList =  await GetGeoinfoAsync(processlist);
+
+        //    //    _getGeoInfoPipeline.Invoked();
+        //    //};
+
+        //    //yield return _getGeoInfoPipeline;
+
+
+        //    //_updateDBPipeline.Execute = () => {
+
+        //    //    _updateDB(netStatList);
+        //    //    _updateDBPipeline.Invoked();
+        //    //};
+
+        //    //yield return _updateDBPipeline;
+
+
+
+        //}
+
+      
+
+        public string GetHostByAddress(string ipAddress)
+        {
+            try
+            {
+                return Dns.GetHostEntry(ipAddress).HostName;
+             
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+
     }
 }

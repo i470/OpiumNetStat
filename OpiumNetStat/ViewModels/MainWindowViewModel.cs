@@ -31,7 +31,7 @@ namespace OpiumNetStat.ViewModels
            
         }
 
-        List<PortInfo> KnownPorts;
+        List<ProcessIPInfo> KnownPorts;
 
         public ICommand HideHTTPCommand { get; set; }
         public ICommand RefreshCommand { get; set; }
