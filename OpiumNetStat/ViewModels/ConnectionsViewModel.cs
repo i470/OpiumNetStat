@@ -77,10 +77,7 @@ namespace OpiumNetStat.ViewModels
                 var index = netStat.IndexOf(net);
                 netStat.RemoveAt(index);
                 netStat.Insert(index, result);
-                //net = result;
-
-                // NetStat.Remove();
-                // NetStat.Insert(0, result);
+                NetStat = netStat;
 
             }
             else

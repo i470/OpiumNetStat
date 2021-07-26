@@ -25,7 +25,7 @@
     </WindowChrome.WindowChrome>-->
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
-            <Button  Content="Settingss">
+            <Button  Content="Settings">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">

@@ -231,6 +231,7 @@
     <Compile Include="utils\IActionCommand.cs" />
     <Compile Include="utils\Helper.cs" />
     <Compile Include="utils\PeriodicTask.cs" />
+    <Compile Include="utils\Port.cs" />
     <Compile Include="utils\ProcessInformation.cs" />
     <Compile Include="utils\RetryHelper.cs" />
     <Compile Include="ViewModels\ConnectionsViewModel.cs" />

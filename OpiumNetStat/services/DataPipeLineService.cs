@@ -37,32 +37,40 @@ namespace OpiumNetStat.services
 
         private void pushPipeLine(ProcessIPInfo proc)
         {
-            //if(netStatDict.ContainsKey(proc.RemoteIp))
-            //{
-            //    var er = netStatDict[proc.RemoteIp];
-            //    er.ProcessInfo = proc;
+            //remote IP is already logged
+            //publish update
+            if (netStatDict.ContainsKey(proc.RemoteIp))
+            {
+                var er = netStatDict[proc.RemoteIp];
+                er.ProcessInfo = proc;
 
-            //    if(er.IpInfo is null)
-            //    {
-            //       // er.IpInfo = ips.GetIPInfo(proc).Result;
-            //    }
+                if (er.IpInfo is null)
+                {
+                    // er.IpInfo = ips.GetIPInfo(proc).Result;
+                }
 
-            //    ea.GetEvent<ConnectionUpdateEvent>().Publish(er);
-            //}
-            //else
-            //{
-            //    var ipInfo = ips.GetIPInfo(proc).Result;
+                ea.GetEvent<ConnectionUpdateEvent>().Publish(er);
+            }
+            
+            //new remote IP
+            //get IP info and update current view of connections
+            else
+            {
+                ips.GetIPInfo(proc.RemoteIp, (error,ipInfo) =>
+                {
+                    if (error == null)
+                    {
+                        var netstat = new NetStatItemViewModel(proc)
+                        {
+                            IpInfo = ipInfo, Host = GetHostByAddress(proc.RemoteIp)
+                        };
+                        
+                        netStatDict.Add(proc.RemoteIp, netstat);
+                        ea.GetEvent<ConnectionUpdateEvent>().Publish(netstat);
+                    }
 
-            //    if(ipInfo!=null)
-            //    {
-            //        var netstat = new NetStatItemViewModel(proc);
-            //        netstat.IpInfo = ipInfo;
-            //        netstat.Host = GetHostByAddress(proc.RemoteIp);
-            //        netStatDict.Add(proc.RemoteIp, netstat);
-
-            //        ea.GetEvent<ConnectionUpdateEvent>().Publish(netstat);
-            //    }
-            //}
+                });
+            }
 
         }
 

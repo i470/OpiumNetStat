@@ -53,8 +53,10 @@ namespace OpiumNetStat.ViewModels
             ProxyTrafficCommand = new DelegateCommand(TurnOnProxy, CanTurnOnProxy);
             IsProxyOn = false;
 
-            proxyServer = new ProxyServer();
-            proxyServer.ForwardToUpstreamGateway = true;
+            proxyServer = new ProxyServer
+            {
+                ForwardToUpstreamGateway = true
+            };
 
         }
 
@@ -169,78 +171,90 @@ namespace OpiumNetStat.ViewModels
 
         private async Task addSessionAsync(SessionEventArgsBase e)
         {
-            var item = createSessionListItem(e);
+            var webConnection = createSessionListItem(e);
 
 
-            var host = e.HttpClient.Request.Host.Split(':').First();
-
-            //foreach (var em in Sessions.Where(x => x.IpInfo is null))
-            //{
-            //    if (!ipDictionary.ContainsKey(em.RemoteIp))
-            //    {
-            //        ipDictionary.Add(em.RemoteIp, await getIpInfo(em.RemoteIp));
-
-            //    }
-
-            //}
-
-            if (ipDictionary.TryGetValue(item.RemoteIp, out var i))
+            if (e.HttpClient.Request.Host != null)
             {
-                item.IpInfo = i;
+                //get clean host name
+                var host = e.HttpClient.Request.Host.Split(':').First();
 
-            }
-            else
-            {
-                i = await getIpInfo(item.RemoteIp);
-                ipDictionary.Add(item.RemoteIp, i);
-                item.IpInfo = i;
-            }
-
-
-            if (!sessionDictionary.ContainsKey(host))
-            {
-                sessionDictionary.Add(item.Host, item);
-                Sessions.Insert(0, sessionDictionary[item.Host]);
-            }
-            else
-            {
-
-                if (!string.IsNullOrEmpty(item.Url))
+                //check for sessions that doesn't have IP info
+                //then add them to IP catalog and update IP info
+                foreach (var em in Sessions.Where(x => x.IpInfo is null))
                 {
-                    sessionDictionary[item.Host].Url = item.Url;
-                }
+                    if (!ipDictionary.ContainsKey(em.RemoteIp))
+                    {
+                        ipDictionary.Add(em.RemoteIp, await getIpInfo(em.RemoteIp));
 
-                var session = Sessions.Where(x => x.Host.Equals(item.Host)).FirstOrDefault();
-                if (session != null)
-                {
-
-                    var index = Sessions.IndexOf(session);
-                    Sessions.RemoveAt(index);
-                    Sessions.Insert(index, sessionDictionary[item.Host]);
+                    }
 
                 }
 
+                //if IP is already in the IP catalog, update it info with new
+                //if not get IP info and add it to the catalog
+                if (ipDictionary.TryGetValue(webConnection.RemoteIp, out var ipInfo))
+                {
+                    webConnection.IpInfo = ipInfo;
+
+                }
+                else
+                {
+                    ipInfo = await getIpInfo(webConnection.RemoteIp);
+                    ipDictionary.Add(webConnection.RemoteIp, ipInfo);
+                    webConnection.IpInfo = ipInfo;
+                }
+
+                
+                //Update session catalog with new host
+                if (!sessionDictionary.ContainsKey(host))
+                {
+                    sessionDictionary.Add(webConnection.Host, webConnection);
+                    Sessions.Insert(0, sessionDictionary[webConnection.Host]);
+                }
+                
+                //update existing host entry with new info
+                else
+                {
+
+                    if (!string.IsNullOrEmpty(webConnection.Url))
+                    {
+                        sessionDictionary[webConnection.Host].Url = webConnection.Url;
+                    }
+
+                    var session = Sessions.FirstOrDefault(x => x.Host.Equals(webConnection.Host));
+                    if (session != null)
+                    {
+
+                        var index = Sessions.IndexOf(session);
+                        Sessions.RemoveAt(index);
+                        Sessions.Insert(index, sessionDictionary[webConnection.Host]);
+
+                    }
+
+                }
             }
-
-            
-           
-
         }
 
+        /// <summary>
+        /// Generates session item object
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private SessionListItem createSessionListItem(SessionEventArgsBase e)
         {
             bool isTunnelConnect = e is TunnelConnectSessionEventArgs;
 
-            var item = new SessionListItem
+            var sessionInfo = new SessionListItem
             {
                 HttpClient = e.HttpClient,
                 IsTunnelConnect = isTunnelConnect,
                 Host = e.HttpClient.Request.Host
             };
 
-            item.Update(e);
+            sessionInfo.Update(e);
 
-            return item;
+            return sessionInfo;
         }
 
 
